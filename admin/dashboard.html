@@ -14,7 +14,7 @@
             --bg-dark: #0b0b0c;
             --sidebar-width: 260px;
         }
-        body { background: #f4f7f6; font-family: 'Inter', sans-serif; }
+        body { background: #f4f7f6; font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
         /* Sidebar Styles */
         .sidebar { 
@@ -23,14 +23,18 @@
             color: white; 
             padding: 30px 20px;
             position: fixed;
+            left: 0;
+            top: 0;
             width: var(--sidebar-width);
-            z-index: 1000;
-            transition: all 0.3s;
+            z-index: 1050;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .main-content { 
             margin-left: var(--sidebar-width);
             padding: 40px; 
             transition: all 0.3s;
+            min-height: 100vh;
+            width: calc(100% - var(--sidebar-width));
         }
         
         /* Mobile Navigation */
@@ -77,9 +81,11 @@
             .sidebar {
                 transform: translateX(-100%);
                 width: 280px;
+                left: 0;
+                top: 0;
             }
             .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0; padding: 20px; }
+            .main-content { margin-left: 0 !important; padding: 20px; width: 100%; }
             .mobile-nav { display: flex; }
             .overlay {
                 display: none;
@@ -90,9 +96,38 @@
             }
             .overlay.active { display: block; }
             
-            .table-responsive { border: 0; }
+            .table-responsive { border: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
             .page-header { flex-direction: column; align-items: flex-start !important; gap: 15px; }
             .btn-jns { width: 100%; }
+
+            /* Mobile Card-style Table */
+            .table thead { display: none; }
+            .table tbody tr { 
+                display: block; 
+                margin-bottom: 15px; 
+                border: 1px solid #eee; 
+                border-radius: 10px; 
+                padding: 10px;
+                background: #fff;
+            }
+            .table tbody td { 
+                display: flex; 
+                justify-content: space-between; 
+                align-items: center; 
+                padding: 10px 5px; 
+                border: none;
+                text-align: right;
+            }
+            .table tbody td:before {
+                content: attr(data-label);
+                font-weight: 700;
+                text-align: left;
+                text-transform: uppercase;
+                font-size: 11px;
+                color: #718096;
+            }
+            .table tbody td.text-end { text-align: right; justify-content: flex-end; }
+            .table tbody td.text-end:before { display: none; }
         }
 
         /* Table Optimization */
@@ -236,20 +271,20 @@
             const packages = await TrackingDB.getAll();
             list.innerHTML = packages.map(pkg => `
                 <tr>
-                    <td>
+                    <td data-label="Code">
                         <div class="fw-bold">${pkg.code}</div>
                         <div class="text-muted d-lg-none" style="font-size: 11px;">${pkg.lat}, ${pkg.lng}</div>
                     </td>
-                    <td>
+                    <td data-label="Location">
                         <div>${pkg.locationName}</div>
                         <div class="text-muted small d-none d-lg-block">${pkg.lat}, ${pkg.lng}</div>
                     </td>
-                    <td>
+                    <td data-label="Status">
                         <span class="status-badge ${pkg.onHold ? 'status-hold' : 'status-active'}">
                             ${pkg.onHold ? 'ON HOLD' : pkg.status}
                         </span>
                     </td>
-                    <td class="small text-muted">${new Date(pkg.updatedAt).toLocaleDateString()}</td>
+                    <td data-label="Update" class="small text-muted">${new Date(pkg.updatedAt).toLocaleDateString()}</td>
                     <td class="text-end">
                         <div class="action-btns justify-content-end">
                             <button class="btn btn-sm btn-outline-secondary toggle-hold" data-code="${pkg.code}" title="${pkg.onHold ? 'Release' : 'Hold'}">
