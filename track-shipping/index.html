@@ -399,7 +399,7 @@ window.smartsupp||(function(d) {
             document.getElementById('tracking-form').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const code = document.getElementById('track-code').value;
-                const pkg = TrackingDB.getByCode(code);
+                const pkg = await TrackingDB.getByCode(code);
 
                 document.getElementById('not-found').style.display = 'none';
                 document.getElementById('tracking-content').style.display = 'none';
