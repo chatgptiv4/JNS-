@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin Login | JNS express delivery</title>
+    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.d5a0532d55f3.css">
+    <link rel="stylesheet" href="../static/assets/css/common-style.ce230ada3bee.css">
+    <style>
+        body { background: var(--bg-dark); color: white; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .login-card { background: white; padding: 40px; border-radius: 10px; color: black; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .btn-primary { background: #FF8C00; border: none; width: 100%; padding: 12px; font-weight: bold; }
+        .logo-text { font-size: 24px; font-weight: 700; color: var(--bg-dark); text-align: center; margin-bottom: 30px; display: block; text-decoration: none; }
+        .logo-text span { color: #FF8C00; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <a href="../index.html" class="logo-text">JNS<span>delivery</span></a>
+        <h4 class="text-center mb-4">Admin Access</h4>
+        <form id="login-form">
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input type="text" id="username" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" id="password" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login to Dashboard</button>
+            <div id="login-error" class="text-danger mt-3 text-center" style="display:none;">Invalid credentials</div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { TrackingDB } from '../static/assets/js/tracking/db.js';
+        
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            // Simple hardcoded credentials for demo/portfolio
+            if (user === 'admin' && pass === 'jns2026') {
+                sessionStorage.setItem('jns_admin_auth', 'true');
+                sessionStorage.setItem('jns_admin_expiry', Date.now() + (30 * 60 * 1000));
+                window.location.href = 'dashboard.html';
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
