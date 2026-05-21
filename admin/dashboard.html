@@ -102,12 +102,17 @@
 
         // Security Check
         if (sessionStorage.getItem('jns_admin_auth') !== 'true' || Date.now() > parseInt(sessionStorage.getItem('jns_admin_expiry'))) {
-            window.location.href = 'index.html';
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/admin/dashboard')) {
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = 'admin/index.html';
+            }
         }
 
-        function renderPackages() {
+        async function renderPackages() {
             const list = document.getElementById('package-list');
-            const packages = TrackingDB.getAll();
+            const packages = await TrackingDB.getAll();
             list.innerHTML = packages.map(pkg => `
                 <tr>
                     <td><strong>${pkg.code}</strong></td>
@@ -129,7 +134,7 @@
             `).join('');
         }
 
-        document.getElementById('add-package-form').addEventListener('submit', (e) => {
+        document.getElementById('add-package-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const newPkg = {
                 code: TrackingDB.generateCode(),
@@ -139,22 +144,22 @@
                 status: document.getElementById('pkg-status').value,
                 onHold: false
             };
-            TrackingDB.save(newPkg);
+            await TrackingDB.save(newPkg);
             renderPackages();
             bootstrap.Modal.getInstance(document.getElementById('addPackageModal')).hide();
         });
 
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', async (e) => {
             if (e.target.classList.contains('toggle-hold')) {
                 const code = e.target.dataset.code;
-                const pkg = TrackingDB.getByCode(code);
+                const pkg = await TrackingDB.getByCode(code);
                 pkg.onHold = !pkg.onHold;
-                TrackingDB.save(pkg);
+                await TrackingDB.save(pkg);
                 renderPackages();
             }
             if (e.target.classList.contains('delete-pkg')) {
                 if(confirm('Are you sure?')) {
-                    TrackingDB.delete(e.target.dataset.code);
+                    await TrackingDB.delete(e.target.dataset.code);
                     renderPackages();
                 }
             }
@@ -162,11 +167,18 @@
 
         document.getElementById('logout-btn').addEventListener('click', () => {
             sessionStorage.clear();
-            window.location.href = 'index.html';
+            const currentPath = window.location.pathname;
+            if (currentPath.includes('/admin/dashboard')) {
+                window.location.href = 'index.html';
+            } else {
+                window.location.href = 'admin/index.html';
+            }
         });
 
-        TrackingDB.init();
-        renderPackages();
+        (async () => {
+            await TrackingDB.init();
+            renderPackages();
+        })();
     </script>
 </body>
 </html>

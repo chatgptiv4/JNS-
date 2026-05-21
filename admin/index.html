@@ -44,7 +44,16 @@
             if (user === 'admin' && pass === 'jns2026') {
                 sessionStorage.setItem('jns_admin_auth', 'true');
                 sessionStorage.setItem('jns_admin_expiry', Date.now() + (30 * 60 * 1000));
-                window.location.href = 'dashboard.html';
+                
+                // Robust redirect for hosted environments (Vercel/Netlify)
+                // If URL is /admin, redirect to /admin/dashboard.html
+                // If URL is /admin/, redirect to dashboard.html
+                const currentPath = window.location.pathname;
+                if (currentPath.endsWith('/admin')) {
+                    window.location.href = 'admin/dashboard.html';
+                } else {
+                    window.location.href = 'dashboard.html';
+                }
             } else {
                 document.getElementById('login-error').style.display = 'block';
             }

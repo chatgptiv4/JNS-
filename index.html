@@ -1135,7 +1135,7 @@ window.smartsupp||(function(d) {
     </aside>
     <script type="module">
         import { TrackingDB } from './static/assets/js/tracking/db.js';
-        window.addEventListener('load', () => TrackingDB.init());
+        window.addEventListener('load', async () => await TrackingDB.init());
     </script>
 </body>
 </html>

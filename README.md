@@ -61,16 +61,19 @@ The tracking map is powered by the **Google Maps JavaScript API**. It uses the c
 
 If you are moving this site to a live server, follow these steps:
 
-### Step 0: Google Maps API Key (NEW)
-To make the tracking map work, you **must** provide your own Google Maps API Key:
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
-2. Create a new project and enable the **"Maps JavaScript API"**.
-3. Generate an **API Key** under "Credentials".
-4. Open `track-shipping/index.html`.
-5. Find the line: `<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY..."></script>`.
-6. Replace `YOUR_GOOGLE_MAPS_API_KEY` with your actual key.
+### Step 0: Firebase Backend Setup (NEW - For Cross-Device Sharing)
+To make your tracking codes visible on all devices (not just your own), you need to connect the site to Firebase:
+1. Go to the [Firebase Console](https://console.firebase.google.com/).
+2. Create a new project (e.g., "JNS-Logistics").
+3. In the project dashboard, click the **Web icon (`</>`)** to register a web app.
+4. Copy the `firebaseConfig` object provided in the setup instructions.
+5. Open `static/assets/js/tracking/db.js`.
+6. Replace the placeholder `firebaseConfig` with your actual config.
+7. **Crucial**: In the Firebase Console, go to **Build > Realtime Database**.
+8. Create a database, choose a location, and start in **Test Mode** (or update rules to allow read/write).
+9. Copy the **Database URL** and ensure it's in your `firebaseConfig` in `db.js`.
 
-### Step 1: Form Handling (Contact/Newsletter)
+### Step 1: Google Maps API Key (NEW)
 The current forms are visual templates. To make them send real emails:
 1. **Newsletter**: In `index.html`, find the `<form class="subscribe-form">`. Replace the `action="#"` with your Mailchimp or Formspree URL.
 2. **Contact**: The "Help" and "Support" links are currently `mailto:` links. You can change these to point to a contact form or a specific CRM.
