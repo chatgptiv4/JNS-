@@ -1,294 +1,716 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Admin Dashboard | JNS express delivery</title>
-    <link rel="stylesheet" href="../static/assets/css/bootstrap.min.d5a0532d55f3.css">
-    <link rel="stylesheet" href="../static/assets/lib/font-awesome-pro/css/fontawesome.min.7d3db9a481ee.css">
-    <link rel="stylesheet" href="../static/assets/css/common-style.ce230ada3bee.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="../static/assets/css/bootstrap.min.d5a0532d55f3.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../static/assets/lib/font-awesome-pro/css/fontawesome.min.7d3db9a481ee.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../static/assets/css/common-style.ce230ada3bee.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --jns-orange: #FF8C00;
-            --bg-dark: #0b0b0c;
-            --sidebar-width: 260px;
+      :root {
+        --jns-orange: #ff8c00;
+        --bg-dark: #0b0b0c;
+        --sidebar-width: 260px;
+      }
+      body {
+        background: #f4f7f6;
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        background: var(--bg-dark);
+        min-height: 100vh;
+        color: white;
+        padding: 30px 20px;
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: var(--sidebar-width);
+        z-index: 1050;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .main-content {
+        margin-left: var(--sidebar-width);
+        padding: 40px;
+        transition: all 0.3s;
+        min-height: 100vh;
+        width: calc(100% - var(--sidebar-width));
+      }
+
+      /* Mobile Navigation */
+      .mobile-nav {
+        display: none;
+        background: var(--bg-dark);
+        padding: 15px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 1001;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .mobile-nav .logo-text {
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        text-decoration: none;
+      }
+      .mobile-nav .logo-text span {
+        color: var(--jns-orange);
+      }
+      .menu-toggle {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+      }
+
+      .nav-link {
+        color: rgba(255, 255, 255, 0.7) !important;
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.2s;
+      }
+      .nav-link:hover,
+      .nav-link.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: white !important;
+      }
+      .nav-link.active {
+        border-left: 4px solid var(--jns-orange);
+      }
+
+      .card {
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        border-radius: 12px;
+      }
+      .btn-jns {
+        background: var(--jns-orange);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+      .btn-jns:hover {
+        background: #e67e00;
+        color: white;
+      }
+
+      .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .status-hold {
+        background: #fff5f5;
+        color: #c53030;
+        border: 1px solid #feb2b2;
+      }
+      .status-active {
+        background: #f0fff4;
+        color: #22543d;
+        border: 1px solid #9ae6b4;
+      }
+      .status-transit {
+        background: #ebf8ff;
+        color: #2b6cb0;
+        border: 1px solid #bee3f8;
+      }
+      .status-delivered {
+        background: #f0fff4;
+        color: #2f855a;
+        border: 1px solid #c6f6d5;
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 991px) {
+        .sidebar {
+          transform: translateX(-100%);
+          width: 280px;
+          left: 0;
+          top: 0;
         }
-        body { background: #f4f7f6; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        
-        /* Sidebar Styles */
-        .sidebar { 
-            background: var(--bg-dark); 
-            min-height: 100vh; 
-            color: white; 
-            padding: 30px 20px;
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: var(--sidebar-width);
-            z-index: 1050;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .sidebar.open {
+          transform: translateX(0);
         }
-        .main-content { 
-            margin-left: var(--sidebar-width);
-            padding: 40px; 
-            transition: all 0.3s;
-            min-height: 100vh;
-            width: calc(100% - var(--sidebar-width));
+        .main-content {
+          margin-left: 0 !important;
+          padding: 20px;
+          width: 100%;
         }
-        
-        /* Mobile Navigation */
         .mobile-nav {
-            display: none;
-            background: var(--bg-dark);
-            padding: 15px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 1001;
-            justify-content: space-between;
-            align-items: center;
+          display: flex;
         }
-        .mobile-nav .logo-text { font-size: 20px; font-weight: 700; color: white; text-decoration: none; }
-        .mobile-nav .logo-text span { color: var(--jns-orange); }
-        .menu-toggle { background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; }
-
-        .nav-link { 
-            color: rgba(255,255,255,0.7) !important; 
-            padding: 12px 15px; 
-            border-radius: 8px;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            transition: all 0.2s;
+        .overlay {
+          display: none;
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.5);
+          z-index: 999;
         }
-        .nav-link:hover, .nav-link.active { 
-            background: rgba(255,255,255,0.1); 
-            color: white !important; 
-        }
-        .nav-link.active { border-left: 4px solid var(--jns-orange); }
-
-        .card { border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; border-radius: 12px; }
-        .btn-jns { background: var(--jns-orange); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; }
-        .btn-jns:hover { background: #e67e00; color: white; }
-        
-        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
-        .status-hold { background: #fff5f5; color: #c53030; border: 1px solid #feb2b2; }
-        .status-active { background: #f0fff4; color: #22543d; border: 1px solid #9ae6b4; }
-
-        /* Responsive Adjustments */
-        @media (max-width: 991px) {
-            .sidebar {
-                transform: translateX(-100%);
-                width: 280px;
-                left: 0;
-                top: 0;
-            }
-            .sidebar.open { transform: translateX(0); }
-            .main-content { margin-left: 0 !important; padding: 20px; width: 100%; }
-            .mobile-nav { display: flex; }
-            .overlay {
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0,0,0,0.5);
-                z-index: 999;
-            }
-            .overlay.active { display: block; }
-            
-            .table-responsive { border: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-            .page-header { flex-direction: column; align-items: flex-start !important; gap: 15px; }
-            .btn-jns { width: 100%; }
-
-            /* Mobile Card-style Table */
-            .table thead { display: none; }
-            .table tbody tr { 
-                display: block; 
-                margin-bottom: 15px; 
-                border: 1px solid #eee; 
-                border-radius: 10px; 
-                padding: 10px;
-                background: #fff;
-            }
-            .table tbody td { 
-                display: flex; 
-                justify-content: space-between; 
-                align-items: center; 
-                padding: 10px 5px; 
-                border: none;
-                text-align: right;
-            }
-            .table tbody td:before {
-                content: attr(data-label);
-                font-weight: 700;
-                text-align: left;
-                text-transform: uppercase;
-                font-size: 11px;
-                color: #718096;
-            }
-            .table tbody td.text-end { text-align: right; justify-content: flex-end; }
-            .table tbody td.text-end:before { display: none; }
+        .overlay.active {
+          display: block;
         }
 
-        /* Table Optimization */
-        .table thead th { 
-            background: #f8f9fa; 
-            border-top: none; 
-            font-size: 12px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px; 
-            color: #718096;
-            padding: 15px;
+        .table-responsive {
+          border: 0;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
         }
-        .table tbody td { padding: 20px 15px; vertical-align: middle; }
-        .action-btns { display: flex; gap: 8px; }
+        .page-header {
+          flex-direction: column;
+          align-items: flex-start !important;
+          gap: 15px;
+        }
+        .btn-jns {
+          width: 100%;
+        }
+
+        /* Mobile Card-style Table */
+        .table thead {
+          display: none;
+        }
+        .table tbody tr {
+          display: block;
+          margin-bottom: 15px;
+          border: 1px solid #eee;
+          border-radius: 10px;
+          padding: 10px;
+          background: #fff;
+        }
+        .table tbody td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 10px 5px;
+          border: none;
+          text-align: right;
+        }
+        .table tbody td:before {
+          content: attr(data-label);
+          font-weight: 700;
+          text-align: left;
+          text-transform: uppercase;
+          font-size: 11px;
+          color: #718096;
+        }
+        .table tbody td.text-end {
+          text-align: right;
+          justify-content: flex-end;
+        }
+        .table tbody td.text-end:before {
+          display: none;
+        }
+      }
+
+      /* Table Optimization */
+      .table thead th {
+        background: #f8f9fa;
+        border-top: none;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #718096;
+        padding: 15px;
+      }
+      .table tbody td {
+        padding: 20px 15px;
+        vertical-align: middle;
+      }
+      .action-btns {
+        display: flex;
+        gap: 8px;
+      }
+
+      /* Modal Tabs */
+      .modal-tabs .nav-link {
+        color: #4a5568 !important;
+        border: none;
+        border-bottom: 2px solid transparent;
+        border-radius: 0;
+        padding: 10px 15px;
+        font-weight: 600;
+      }
+      .modal-tabs .nav-link.active {
+        color: var(--jns-orange) !important;
+        border-bottom: 2px solid var(--jns-orange);
+        background: transparent;
+      }
+      .log-item {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 10px;
+        margin-bottom: 10px;
+        position: relative;
+      }
+      .img-preview-container {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .img-preview {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #eee;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="overlay" id="sidebarOverlay"></div>
-    
+
     <div class="mobile-nav">
-        <a href="../index.html" class="logo-text">JNS<span>delivery</span></a>
-        <button class="menu-toggle" id="sidebarToggle">☰</button>
+      <a href="../index.html" class="logo-text">JNS<span>delivery</span></a>
+      <button class="menu-toggle" id="sidebarToggle">☰</button>
     </div>
 
     <div class="container-fluid p-0">
-        <div class="d-flex">
-            <div class="sidebar" id="sidebar">
-                <div class="d-none d-lg-block mb-5">
-                    <a href="../index.html" style="font-size: 24px; font-weight: 700; color: #fff; text-decoration: none;">JNS<span style="color: #FF8C00;">delivery</span></a>
-                </div>
-                <nav class="nav flex-column">
-                    <a class="nav-link active" href="#"><i class="fas fa-box"></i> Packages</a>
-                    <a class="nav-link" href="#"><i class="fas fa-chart-line"></i> Analytics</a>
-                    <a class="nav-link" href="#"><i class="fas fa-cog"></i> Settings</a>
-                    <a class="nav-link mt-auto text-danger" href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                </nav>
-            </div>
-            
-            <div class="main-content flex-grow-1">
-                <div class="d-flex justify-content-between align-items-center mb-5 page-header">
-                    <div>
-                        <h2 class="fw-bold mb-1">Package Management</h2>
-                        <p class="text-muted small mb-0">Manage and track all customer shipments</p>
-                    </div>
-                    <button class="btn btn-jns" data-bs-toggle="modal" data-bs-target="#addPackageModal">
-                        + New Tracking Code
-                    </button>
-                </div>
-
-                <div class="card">
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th>Code</th>
-                                        <th>Location</th>
-                                        <th>Status</th>
-                                        <th>Last Update</th>
-                                        <th class="text-end">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="package-list">
-                                    <!-- Data populated by JS -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      <div class="d-flex">
+        <div class="sidebar" id="sidebar">
+          <div class="d-none d-lg-block mb-5">
+            <a
+              href="../index.html"
+              style="
+                font-size: 24px;
+                font-weight: 700;
+                color: #fff;
+                text-decoration: none;
+              "
+              >JNS<span style="color: #ff8c00">delivery</span></a
+            >
+          </div>
+          <nav class="nav flex-column">
+            <a class="nav-link active" href="#"
+              ><i class="fas fa-box"></i> Packages</a
+            >
+            <a class="nav-link" href="#"
+              ><i class="fas fa-chart-line"></i> Analytics</a
+            >
+            <a class="nav-link" href="#"><i class="fas fa-cog"></i> Settings</a>
+            <a class="nav-link mt-auto text-danger" href="#" id="logout-btn"
+              ><i class="fas fa-sign-out-alt"></i> Logout</a
+            >
+          </nav>
         </div>
+
+        <div class="main-content flex-grow-1">
+          <div
+            class="d-flex justify-content-between align-items-center mb-5 page-header"
+          >
+            <div>
+              <h2 class="fw-bold mb-1">Package Management</h2>
+              <p class="text-muted small mb-0">
+                Manage and track all customer shipments
+              </p>
+            </div>
+            <button
+              class="btn btn-jns"
+              data-bs-toggle="modal"
+              data-bs-target="#addPackageModal"
+            >
+              + New Tracking Code
+            </button>
+          </div>
+
+          <div class="card">
+            <div class="card-body p-0">
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>Code</th>
+                      <th>Location</th>
+                      <th>Status</th>
+                      <th>Last Update</th>
+                      <th class="text-end">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="package-list">
+                    <!-- Data populated by JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Add Package Modal -->
+    <!-- Shipment Modal -->
     <div class="modal fade" id="addPackageModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-dark text-white border-0">
-                    <h5 class="modal-title fw-bold">New Shipment</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header bg-dark text-white border-0">
+            <h5 class="modal-title fw-bold" id="modalTitle">New Shipment</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <form id="add-package-form">
+            <input type="hidden" id="edit-mode" value="false" />
+            <input type="hidden" id="edit-code" value="" />
+
+            <div class="modal-body p-0">
+              <ul
+                class="nav nav-tabs modal-tabs px-4 pt-3"
+                id="shipmentTabs"
+                role="tablist"
+              >
+                <li class="nav-item">
+                  <button
+                    class="nav-link active"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-customer"
+                    type="button"
+                  >
+                    Customer
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-package"
+                    type="button"
+                  >
+                    Package
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-payment"
+                    type="button"
+                  >
+                    Payment
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-logs"
+                    type="button"
+                  >
+                    Logs
+                  </button>
+                </li>
+                <li class="nav-item">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#tab-images"
+                    type="button"
+                  >
+                    Images
+                  </button>
+                </li>
+              </ul>
+
+              <div class="tab-content p-4">
+                <div
+                  id="modalAlert"
+                  class="alert alert-danger d-none"
+                  role="alert"
+                ></div>
+                <!-- Customer Tab -->
+                <div class="tab-pane fade show active" id="tab-customer">
+                  <div class="mb-3">
+                    <label class="form-label fw-600">Customer Full Name</label>
+                    <input
+                      type="text"
+                      id="cust-name"
+                      class="form-control"
+                      placeholder="e.g. John Doe"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-600"
+                      >Contact Details (Phone/Email)</label
+                    >
+                    <input
+                      type="text"
+                      id="cust-contact"
+                      class="form-control"
+                      placeholder="e.g. +1 555-0123"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-600"
+                      >Full Delivery Address</label
+                    >
+                    <textarea
+                      id="cust-address"
+                      class="form-control"
+                      rows="3"
+                      placeholder="Street, City, Zip, Country"
+                      required
+                    ></textarea>
+                  </div>
                 </div>
-                <form id="add-package-form">
-                    <div class="modal-body p-4">
-                        <div class="mb-4">
-                            <label class="form-label fw-600">Destination City</label>
-                            <input type="text" id="loc-name" class="form-control form-control-lg" placeholder="e.g. London, UK" required>
-                        </div>
-                        <div class="row g-3 mb-4">
-                            <div class="col-6">
-                                <label class="form-label fw-600">Latitude</label>
-                                <input type="number" step="any" id="loc-lat" class="form-control" value="0" required>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label fw-600">Longitude</label>
-                                <input type="number" step="any" id="loc-lng" class="form-control" value="0" required>
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label fw-600">Status Update</label>
-                            <input type="text" id="pkg-status" class="form-control" value="In Transit" required>
-                        </div>
-                        <p class="text-muted small mt-2">A unique 12-character JNS code will be generated automatically.</p>
+
+                <!-- Package Tab -->
+                <div class="tab-pane fade" id="tab-package">
+                  <div class="mb-3">
+                    <label class="form-label fw-600"
+                      >Items Ordered (Description)</label
+                    >
+                    <textarea
+                      id="pkg-desc"
+                      class="form-control"
+                      rows="2"
+                      placeholder="e.g. 1x Laptop, 2x Monitors"
+                      required
+                    ></textarea>
+                  </div>
+                  <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label fw-600">Current Status</label>
+                      <select id="pkg-status" class="form-select">
+                        <option value="In Transit">In Transit</option>
+                        <option value="Out for Delivery">
+                          Out for Delivery
+                        </option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="On Hold">On Hold</option>
+                      </select>
                     </div>
-                    <div class="modal-footer border-0 p-4 pt-0">
-                        <button type="submit" class="btn btn-jns w-100 py-3">Create Shipment</button>
+                    <div class="col-md-6">
+                      <label class="form-label fw-600"
+                        >Current Location Name</label
+                      >
+                      <input
+                        type="text"
+                        id="loc-name"
+                        class="form-control"
+                        placeholder="e.g. London, UK"
+                        required
+                      />
                     </div>
-                </form>
+                  </div>
+                  <div class="row g-3">
+                    <div class="col-6">
+                      <label class="form-label fw-600">Latitude</label>
+                      <input
+                        type="number"
+                        step="any"
+                        id="loc-lat"
+                        class="form-control"
+                        value="0"
+                        required
+                      />
+                    </div>
+                    <div class="col-6">
+                      <label class="form-label fw-600">Longitude</label>
+                      <input
+                        type="number"
+                        step="any"
+                        id="loc-lng"
+                        class="form-control"
+                        value="0"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <div class="form-check form-switch">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="on-hold-toggle"
+                      />
+                      <label
+                        class="form-check-label fw-600"
+                        for="on-hold-toggle"
+                        >Place Package On Hold</label
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Payment Tab -->
+                <div class="tab-pane fade" id="tab-payment">
+                  <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label fw-600"
+                        >Amount Already Paid ($)</label
+                      >
+                      <input
+                        type="number"
+                        id="pay-paid"
+                        class="form-control"
+                        value="0"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label fw-600"
+                        >Outstanding Balance ($)</label
+                      >
+                      <input
+                        type="number"
+                        id="pay-balance"
+                        class="form-control"
+                        value="0"
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-600"
+                      >Amount Required for Release ($)</label
+                    >
+                    <input
+                      type="number"
+                      id="pay-hold"
+                      class="form-control"
+                      value="0"
+                    />
+                    <small class="text-muted"
+                      >Only required if package is on hold.</small
+                    >
+                  </div>
+                </div>
+
+                <!-- Logs Tab -->
+                <div class="tab-pane fade" id="tab-logs">
+                  <div
+                    id="logs-container"
+                    class="mb-3"
+                    style="max-height: 250px; overflow-y: auto"
+                  >
+                    <!-- Logs added here -->
+                  </div>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-outline-dark"
+                    id="add-log-btn"
+                  >
+                    + Add Movement Log
+                  </button>
+                </div>
+
+                <!-- Images Tab -->
+                <div class="tab-pane fade" id="tab-images">
+                  <label class="form-label fw-600"
+                    >Upload Package Images (Max 3)</label
+                  >
+                  <input
+                    type="file"
+                    id="pkg-images"
+                    class="form-control"
+                    accept="image/*"
+                    multiple
+                  />
+                  <div id="img-preview-container" class="img-preview-container">
+                    <!-- Previews here -->
+                  </div>
+                </div>
+              </div>
             </div>
+            <div class="modal-footer border-0 p-4 pt-0">
+              <button
+                type="submit"
+                class="btn btn-jns w-100 py-3"
+                id="saveShipmentBtn"
+              >
+                Create Shipment
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module">
-        import { TrackingDB } from '../static/assets/js/tracking/db.js';
+      import { TrackingDB } from "../static/assets/js/tracking/db.js";
 
-        // Mobile Sidebar Logic
-        const sidebar = document.getElementById('sidebar');
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
+      // Mobile Sidebar Logic
+      const sidebar = document.getElementById("sidebar");
+      const sidebarToggle = document.getElementById("sidebarToggle");
+      const sidebarOverlay = document.getElementById("sidebarOverlay");
 
-        function toggleSidebar() {
-            sidebar.classList.toggle('open');
-            sidebarOverlay.classList.toggle('active');
+      function toggleSidebar() {
+        sidebar.classList.toggle("open");
+        sidebarOverlay.classList.toggle("active");
+      }
+
+      sidebarToggle.addEventListener("click", toggleSidebar);
+      sidebarOverlay.addEventListener("click", toggleSidebar);
+
+      // Security Check
+      if (
+        sessionStorage.getItem("jns_admin_auth") !== "true" ||
+        Date.now() > parseInt(sessionStorage.getItem("jns_admin_expiry"))
+      ) {
+        const currentPath = window.location.pathname;
+        if (currentPath.includes("/admin/dashboard")) {
+          window.location.href = "index.html";
+        } else {
+          window.location.href = "admin/index.html";
         }
+      }
 
-        sidebarToggle.addEventListener('click', toggleSidebar);
-        sidebarOverlay.addEventListener('click', toggleSidebar);
+      // Global state for images and logs
+      let currentImages = [];
+      let currentLogs = [];
 
-        // Security Check
-        if (sessionStorage.getItem('jns_admin_auth') !== 'true' || Date.now() > parseInt(sessionStorage.getItem('jns_admin_expiry'))) {
-            const currentPath = window.location.pathname;
-            if (currentPath.includes('/admin/dashboard')) {
-                window.location.href = 'index.html';
-            } else {
-                window.location.href = 'admin/index.html';
-            }
-        }
-
-        async function renderPackages() {
-            const list = document.getElementById('package-list');
-            const packages = await TrackingDB.getAll();
-            list.innerHTML = packages.map(pkg => `
+      async function renderPackages() {
+        const list = document.getElementById("package-list");
+        const packages = await TrackingDB.getAll();
+        list.innerHTML = packages
+          .map(
+            (pkg) => `
                 <tr>
                     <td data-label="Code">
-                        <div class="fw-bold">${pkg.code}</div>
-                        <div class="text-muted d-lg-none" style="font-size: 11px;">${pkg.lat}, ${pkg.lng}</div>
+                        <div class="fw-bold text-primary">${pkg.code}</div>
+                        <div class="small text-muted">${pkg.customerName || "N/A"}</div>
                     </td>
                     <td data-label="Location">
                         <div>${pkg.locationName}</div>
-                        <div class="text-muted small d-none d-lg-block">${pkg.lat}, ${pkg.lng}</div>
+                        <div class="text-muted small">${pkg.lat}, ${pkg.lng}</div>
                     </td>
                     <td data-label="Status">
-                        <span class="status-badge ${pkg.onHold ? 'status-hold' : 'status-active'}">
-                            ${pkg.onHold ? 'ON HOLD' : pkg.status}
+                        <span class="status-badge ${getStatusClass(pkg.status, pkg.onHold)}">
+                            ${pkg.onHold ? "ON HOLD" : pkg.status}
                         </span>
                     </td>
                     <td data-label="Update" class="small text-muted">${new Date(pkg.updatedAt).toLocaleDateString()}</td>
                     <td class="text-end">
                         <div class="action-btns justify-content-end">
-                            <button class="btn btn-sm btn-outline-secondary toggle-hold" data-code="${pkg.code}" title="${pkg.onHold ? 'Release' : 'Hold'}">
-                                <i class="fas ${pkg.onHold ? 'fa-play' : 'fa-pause'}"></i>
+                            <button class="btn btn-sm btn-outline-primary edit-pkg" data-code="${pkg.code}" title="Edit">
+                                <i class="fas fa-edit"></i>
                             </button>
                             <button class="btn btn-sm btn-outline-danger delete-pkg" data-code="${pkg.code}" title="Delete">
                                 <i class="fas fa-trash"></i>
@@ -296,54 +718,261 @@
                         </div>
                     </td>
                 </tr>
-            `).join('');
+            `,
+          )
+          .join("");
+      }
+
+      function getStatusClass(status, onHold) {
+        if (onHold) return "status-hold";
+        if (status === "Delivered") return "status-delivered";
+        if (status === "In Transit") return "status-transit";
+        return "status-active";
+      }
+
+      // Modal Handling
+      const addPackageModal = new bootstrap.Modal(
+        document.getElementById("addPackageModal"),
+      );
+      const form = document.getElementById("add-package-form");
+      const saveShipmentBtn = document.getElementById("saveShipmentBtn");
+      const modalAlert = document.getElementById("modalAlert");
+
+      function showModalAlert(message, type = "danger") {
+        modalAlert.className = `alert alert-${type}`;
+        modalAlert.textContent = message;
+        modalAlert.classList.remove("d-none");
+      }
+
+      function hideModalAlert() {
+        modalAlert.classList.add("d-none");
+        modalAlert.textContent = "";
+      }
+
+      function validateShipmentData(data) {
+        if (!data.customerName.trim()) return "Customer name is required.";
+        if (!data.customerContact.trim())
+          return "Customer contact details are required.";
+        if (!data.deliveryAddress.trim())
+          return "Delivery address is required.";
+        if (!data.itemsDescription.trim())
+          return "Package description is required.";
+        if (!data.locationName.trim())
+          return "Current location name is required.";
+        if (Number.isNaN(data.lat) || Number.isNaN(data.lng))
+          return "Valid latitude and longitude are required.";
+        if (data.onHold && Number.isNaN(data.paymentHoldAmount))
+          return "Hold release amount must be a number.";
+        return null;
+      }
+
+      // Reset form for new shipment
+      const addShipmentTrigger = document.querySelector(
+        '[data-bs-target="#addPackageModal"]',
+      );
+      if (addShipmentTrigger) {
+        addShipmentTrigger.addEventListener("click", () => {
+          hideModalAlert();
+          form.reset();
+          document.getElementById("edit-mode").value = "false";
+          document.getElementById("modalTitle").textContent = "New Shipment";
+          saveShipmentBtn.textContent = "Create Shipment";
+          document.getElementById("img-preview-container").innerHTML = "";
+          document.getElementById("logs-container").innerHTML = "";
+          currentImages = [];
+          currentLogs = [];
+
+          // Add one default log
+          addLogEntry(new Date().toISOString(), "Pending", "Shipment Created");
+        });
+      }
+
+      // Add Log Entry UI
+      function addLogEntry(timestamp = "", location = "", status = "") {
+        const container = document.getElementById("logs-container");
+        const id = Date.now() + Math.random();
+        const logHtml = `
+                <div class="log-item" id="log-${id}">
+                    <div class="row g-2">
+                        <div class="col-4"><input type="datetime-local" class="form-control form-control-sm log-time" value="${timestamp ? timestamp.substring(0, 16) : ""}"></div>
+                        <div class="col-4"><input type="text" class="form-control form-control-sm log-loc" placeholder="Location" value="${location}"></div>
+                        <div class="col-3"><input type="text" class="form-control form-control-sm log-status" placeholder="Status" value="${status}"></div>
+                        <div class="col-1"><button type="button" class="btn btn-sm text-danger remove-log" onclick="this.closest('.log-item').remove()"><i class="fas fa-times"></i></button></div>
+                    </div>
+                </div>
+            `;
+        container.insertAdjacentHTML("beforeend", logHtml);
+      }
+
+      document
+        .getElementById("add-log-btn")
+        .addEventListener("click", () => addLogEntry());
+
+      // Image Preview
+      document
+        .getElementById("pkg-images")
+        .addEventListener("change", function (e) {
+          const files = Array.from(e.target.files).slice(0, 3);
+          const container = document.getElementById("img-preview-container");
+
+          files.forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+              currentImages.push(event.target.result);
+              const img = document.createElement("img");
+              img.src = event.target.result;
+              img.className = "img-preview";
+              container.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+          });
+        });
+
+      // Save/Update Shipment
+      if (form) {
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          hideModalAlert();
+
+          // Collect logs
+          const logs = Array.from(document.querySelectorAll(".log-item")).map(
+            (item) => ({
+              timestamp: item.querySelector(".log-time").value,
+              location: item.querySelector(".log-loc").value,
+              status: item.querySelector(".log-status").value,
+            }),
+          );
+
+          const isEdit = document.getElementById("edit-mode").value === "true";
+          const code = isEdit
+            ? document.getElementById("edit-code").value
+            : TrackingDB.generateCode();
+
+          const pkgData = {
+            code: code,
+            customerName: document.getElementById("cust-name").value,
+            customerContact: document.getElementById("cust-contact").value,
+            deliveryAddress: document.getElementById("cust-address").value,
+            itemsDescription: document.getElementById("pkg-desc").value,
+            status: document.getElementById("pkg-status").value,
+            locationName: document.getElementById("loc-name").value,
+            lat: parseFloat(document.getElementById("loc-lat").value),
+            lng: parseFloat(document.getElementById("loc-lng").value),
+            onHold: document.getElementById("on-hold-toggle").checked,
+            paymentPaid: parseFloat(document.getElementById("pay-paid").value),
+            paymentBalance: parseFloat(
+              document.getElementById("pay-balance").value,
+            ),
+            paymentHoldAmount: parseFloat(
+              document.getElementById("pay-hold").value,
+            ),
+            movementLogs: logs,
+            images: currentImages,
+          };
+
+          const validationError = validateShipmentData(pkgData);
+          if (validationError) {
+            showModalAlert(validationError);
+            return;
+          }
+
+          try {
+            saveShipmentBtn.disabled = true;
+            saveShipmentBtn.textContent = isEdit
+              ? "Updating..."
+              : "Creating...";
+            await TrackingDB.save(pkgData);
+            addPackageModal.hide();
+            renderPackages();
+          } catch (error) {
+            showModalAlert(
+              "Unable to save shipment. Please check your network connection and try again.",
+            );
+            console.error("Shipment save error:", error);
+          } finally {
+            saveShipmentBtn.disabled = false;
+            saveShipmentBtn.textContent = isEdit
+              ? "Update Shipment"
+              : "Create Shipment";
+          }
+        });
+      }
+
+      // Edit/Delete Delegation
+      document.addEventListener("click", async (e) => {
+        const target = e.target.closest("button");
+        if (!target) return;
+
+        if (target.classList.contains("edit-pkg")) {
+          const code = target.dataset.code;
+          const pkg = await TrackingDB.getByCode(code);
+          if (!pkg) return;
+
+          document.getElementById("edit-mode").value = "true";
+          document.getElementById("edit-code").value = pkg.code;
+          document.getElementById("modalTitle").textContent =
+            `Edit Shipment: ${pkg.code}`;
+          document.getElementById("saveShipmentBtn").textContent =
+            "Update Shipment";
+
+          // Fill fields
+          document.getElementById("cust-name").value = pkg.customerName || "";
+          document.getElementById("cust-contact").value =
+            pkg.customerContact || "";
+          document.getElementById("cust-address").value =
+            pkg.deliveryAddress || "";
+          document.getElementById("pkg-desc").value =
+            pkg.itemsDescription || "";
+          document.getElementById("pkg-status").value =
+            pkg.status || "In Transit";
+          document.getElementById("loc-name").value = pkg.locationName || "";
+          document.getElementById("loc-lat").value = pkg.lat || 0;
+          document.getElementById("loc-lng").value = pkg.lng || 0;
+          document.getElementById("on-hold-toggle").checked =
+            pkg.onHold || false;
+          document.getElementById("pay-paid").value = pkg.paymentPaid || 0;
+          document.getElementById("pay-balance").value =
+            pkg.paymentBalance || 0;
+          document.getElementById("pay-hold").value =
+            pkg.paymentHoldAmount || 0;
+
+          // Logs
+          document.getElementById("logs-container").innerHTML = "";
+          (pkg.movementLogs || []).forEach((log) =>
+            addLogEntry(log.timestamp, log.location, log.status),
+          );
+
+          // Images
+          currentImages = pkg.images || [];
+          const container = document.getElementById("img-preview-container");
+          container.innerHTML = "";
+          currentImages.forEach((src) => {
+            const img = document.createElement("img");
+            img.src = src;
+            img.className = "img-preview";
+            container.appendChild(img);
+          });
+
+          addPackageModal.show();
         }
 
-        document.getElementById('add-package-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const newPkg = {
-                code: TrackingDB.generateCode(),
-                locationName: document.getElementById('loc-name').value,
-                lat: parseFloat(document.getElementById('loc-lat').value),
-                lng: parseFloat(document.getElementById('loc-lng').value),
-                status: document.getElementById('pkg-status').value,
-                onHold: false
-            };
-            await TrackingDB.save(newPkg);
+        if (target.classList.contains("delete-pkg")) {
+          if (confirm("Are you sure you want to delete this shipment?")) {
+            await TrackingDB.delete(target.dataset.code);
             renderPackages();
-            bootstrap.Modal.getInstance(document.getElementById('addPackageModal')).hide();
-        });
+          }
+        }
+      });
 
-        document.addEventListener('click', async (e) => {
-            if (e.target.classList.contains('toggle-hold')) {
-                const code = e.target.dataset.code;
-                const pkg = await TrackingDB.getByCode(code);
-                pkg.onHold = !pkg.onHold;
-                await TrackingDB.save(pkg);
-                renderPackages();
-            }
-            if (e.target.classList.contains('delete-pkg')) {
-                if(confirm('Are you sure?')) {
-                    await TrackingDB.delete(e.target.dataset.code);
-                    renderPackages();
-                }
-            }
-        });
+      document.getElementById("logout-btn").addEventListener("click", () => {
+        sessionStorage.clear();
+        window.location.href = "index.html";
+      });
 
-        document.getElementById('logout-btn').addEventListener('click', () => {
-            sessionStorage.clear();
-            const currentPath = window.location.pathname;
-            if (currentPath.includes('/admin/dashboard')) {
-                window.location.href = 'index.html';
-            } else {
-                window.location.href = 'admin/index.html';
-            }
-        });
-
-        (async () => {
-            await TrackingDB.init();
-            renderPackages();
-        })();
+      (async () => {
+        await TrackingDB.init();
+        renderPackages();
+      })();
     </script>
-</body>
+  </body>
 </html>

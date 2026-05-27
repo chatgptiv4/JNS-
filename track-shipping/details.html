@@ -1,0 +1,435 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Shipment Details | JNS express delivery</title>
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="../static/assets/img/favicon.673237fd26f4.png"
+    />
+    <link
+      rel="stylesheet"
+      href="../static/assets/css/bootstrap.min.d5a0532d55f3.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../static/assets/lib/font-awesome-pro/css/fontawesome.min.7d3db9a481ee.css"
+    />
+    <link
+      rel="stylesheet"
+      href="../static/assets/css/common-style.ce230ada3bee.css"
+    />
+    <link rel="stylesheet" href="../static/assets/css/main.0076aaf87a3e.css" />
+
+    <style>
+      :root {
+        --jns-orange: #ff8c00;
+        --bg-dark: #0b0b0c;
+      }
+      body {
+        background: #f8f9fa;
+      }
+      .details-header {
+        background: var(--bg-dark);
+        color: white;
+        padding: 60px 0;
+        margin-bottom: -50px;
+      }
+      .status-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        border: none;
+        overflow: hidden;
+        margin-bottom: 30px;
+      }
+      .status-header {
+        padding: 25px;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .info-label {
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #718096;
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+      .info-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2d3748;
+      }
+      .timeline {
+        position: relative;
+        padding: 20px 0;
+        list-style: none;
+      }
+      .timeline:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 20px;
+        width: 2px;
+        background: #e2e8f0;
+      }
+      .timeline-item {
+        position: relative;
+        padding-left: 50px;
+        margin-bottom: 30px;
+      }
+      .timeline-marker {
+        position: absolute;
+        left: 12px;
+        top: 5px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: white;
+        border: 4px solid var(--jns-orange);
+        z-index: 1;
+      }
+      .timeline-item.active .timeline-marker {
+        background: var(--jns-orange);
+        box-shadow: 0 0 0 5px rgba(255, 140, 0, 0.2);
+      }
+      .timeline-content h6 {
+        margin-bottom: 2px;
+        font-weight: 700;
+      }
+      .timeline-content span {
+        font-size: 12px;
+        color: #718096;
+      }
+
+      #map-container {
+        width: 100%;
+        height: 400px;
+        background: #eee;
+      }
+      .hold-alert {
+        background: #fff5f5;
+        border: 1px solid #feb2b2;
+        color: #c53030;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+      }
+      .package-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        cursor: pointer;
+        transition: transform 0.3s;
+      }
+      .package-img:hover {
+        transform: scale(1.02);
+      }
+
+      .payment-stat {
+        text-align: center;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 10px;
+      }
+      .payment-stat.highlight {
+        background: #fffaf0;
+        border: 1px solid #feebc8;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header
+      class="main-header"
+      style="position: relative; background: var(--bg-dark)"
+    >
+      <div class="container">
+        <div class="main-header-wapper">
+          <div class="site-logo">
+            <a
+              href="../index.html"
+              style="
+                font-size: 24px;
+                font-weight: 700;
+                color: #fff;
+                text-decoration: none;
+              "
+              >JNS<span style="color: #ff8c00">delivery</span></a
+            >
+          </div>
+          <div class="header-menu-wrap">
+            <ul class="nav-menu">
+              <li><a href="../index.html">Home</a></li>
+              <li><a href="index.html">Track Another</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="details-header text-center">
+      <div class="container">
+        <h1 class="fw-bold mb-2">Shipment Tracking</h1>
+        <p class="opacity-75">
+          Tracking ID:
+          <span id="display-code" class="text-warning">Loading...</span>
+        </p>
+        <div
+          id="details-error"
+          class="alert alert-warning mt-3"
+          style="display: none"
+        >
+          Unable to load this shipment. Please check your tracker code or return
+          to the tracking page.
+        </div>
+      </div>
+    </div>
+
+    <div class="container pb-5">
+      <div class="row">
+        <!-- Left Column: Status & Details -->
+        <div class="col-lg-8">
+          <div class="status-card">
+            <div class="status-header">
+              <div>
+                <span class="info-label">Current Status</span>
+                <h4 id="status-text" class="fw-bold mb-0">---</h4>
+              </div>
+              <div class="text-end">
+                <span class="info-label">Last Updated</span>
+                <div id="update-time" class="info-value">---</div>
+              </div>
+            </div>
+
+            <div id="hold-notice" style="display: none" class="p-4 pt-0">
+              <div class="hold-alert mt-4">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                  <div>
+                    <h5 class="fw-bold mb-1">Package On Hold</h5>
+                    <p class="mb-0">
+                      A release fee of <strong id="hold-amount">$0</strong> is
+                      required before delivery can proceed. Please contact
+                      support.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-4">
+              <div class="row g-4">
+                <div class="col-md-6">
+                  <div class="info-label">Receiver</div>
+                  <div id="cust-name" class="info-value">---</div>
+                  <div id="cust-contact" class="small text-muted">---</div>
+                </div>
+                <div class="col-md-6">
+                  <div class="info-label">Delivery Address</div>
+                  <div id="cust-address" class="info-value small">---</div>
+                </div>
+                <div class="col-12">
+                  <div class="info-label">Items Description</div>
+                  <div
+                    id="pkg-desc"
+                    class="info-value small bg-light p-3 rounded"
+                  >
+                    ---
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Map Section -->
+            <div id="map-section">
+              <div id="map-container"></div>
+            </div>
+          </div>
+
+          <!-- Product Images -->
+          <div class="status-card p-4">
+            <h5 class="fw-bold mb-4">Package Documentation</h5>
+            <div class="row g-3" id="images-container">
+              <!-- Images here -->
+              <div class="col-12 text-center text-muted py-4">
+                No images attached to this shipment.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Timeline & Payment -->
+        <div class="col-lg-4">
+          <!-- Payment Card -->
+          <div class="status-card p-4">
+            <h5 class="fw-bold mb-4">Payment Summary</h5>
+            <div class="row g-2">
+              <div class="col-6">
+                <div class="payment-stat">
+                  <div class="info-label">Paid</div>
+                  <div id="pay-paid" class="fw-bold text-success">$0</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="payment-stat highlight">
+                  <div class="info-label">Balance</div>
+                  <div id="pay-balance" class="fw-bold text-danger">$0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline Card -->
+          <div class="status-card p-4">
+            <h5 class="fw-bold mb-4">Movement Logs</h5>
+            <ul class="timeline" id="logs-list">
+              <!-- Logs here -->
+            </ul>
+          </div>
+
+          <div class="status-card p-4 bg-dark text-white">
+            <h6 class="fw-bold mb-3">Need Assistance?</h6>
+            <p class="small opacity-75">
+              Our 24/7 logistics support team is ready to help you with any
+              questions regarding your shipment.
+            </p>
+            <a
+              href="mailto:support@jns-expressdelivery.com"
+              class="btn btn-warning btn-sm w-100 fw-bold"
+              >Contact Support</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Maps API -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnFIBusuQrnn5V8t89I4cXTOfGvO0IysM&callback=initMapPlaceholder"
+      async
+      defer
+    ></script>
+    <script>
+      window.initMapPlaceholder = () => {};
+    </script>
+
+    <script type="module">
+      import { TrackingDB } from "../static/assets/js/tracking/db.js";
+      import { TrackingMap } from "../static/assets/js/tracking/map.js";
+
+      async function init() {
+        const params = new URLSearchParams(window.location.search);
+        const codeParam = params.get("code");
+        const fallbackCode = localStorage.getItem("jns_tracking_last_code");
+        const code = (codeParam || fallbackCode || "").trim().toUpperCase();
+        const errorBox = document.getElementById("details-error");
+        document.getElementById("display-code").textContent = code || "N/A";
+
+        if (!code) {
+          if (errorBox) {
+            errorBox.innerHTML =
+              'No tracking code was provided. <a href="index.html" class="link-primary">Return to the tracking page</a> and try again.';
+            errorBox.style.display = "block";
+          }
+          return;
+        }
+
+        await TrackingDB.init();
+        const pkg = await TrackingDB.getByCode(code);
+        if (!pkg) {
+          if (errorBox) {
+            errorBox.innerHTML =
+              'Tracking code not found. <a href="index.html" class="link-primary">Return to the tracking page</a> and verify your code.';
+            errorBox.style.display = "block";
+          }
+          return;
+        }
+
+        // Update Basic Info
+        document.getElementById("display-code").textContent = pkg.code;
+        document.getElementById("status-text").textContent = pkg.onHold
+          ? "ON HOLD"
+          : pkg.status;
+        document.getElementById("update-time").textContent = new Date(
+          pkg.updatedAt,
+        ).toLocaleString();
+        document.getElementById("cust-name").textContent =
+          pkg.customerName || "N/A";
+        document.getElementById("cust-contact").textContent =
+          pkg.customerContact || "";
+        document.getElementById("cust-address").textContent =
+          pkg.deliveryAddress || "Address not provided";
+        document.getElementById("pkg-desc").textContent =
+          pkg.itemsDescription || "N/A";
+
+        // Payment
+        document.getElementById("pay-paid").textContent =
+          `$${(pkg.paymentPaid || 0).toLocaleString()}`;
+        document.getElementById("pay-balance").textContent =
+          `$${(pkg.paymentBalance || 0).toLocaleString()}`;
+
+        if (pkg.onHold) {
+          document.getElementById("hold-notice").style.display = "block";
+          document.getElementById("hold-amount").textContent =
+            `$${(pkg.paymentHoldAmount || 0).toLocaleString()}`;
+          document.getElementById("status-text").classList.add("text-danger");
+        }
+
+        // Timeline Logs
+        const logsList = document.getElementById("logs-list");
+        const logs = pkg.movementLogs || [];
+        if (logs.length > 0) {
+          logsList.innerHTML = logs
+            .reverse()
+            .map(
+              (log, index) => `
+                    <li class="timeline-item ${index === 0 ? "active" : ""}">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h6>${log.status}</h6>
+                            <span>${log.location}</span><br>
+                            <span class="opacity-50">${new Date(log.timestamp).toLocaleString()}</span>
+                        </div>
+                    </li>
+                `,
+            )
+            .join("");
+        } else {
+          logsList.innerHTML =
+            '<li class="text-muted small">No logs available.</li>';
+        }
+
+        // Images
+        const imagesContainer = document.getElementById("images-container");
+        const images = pkg.images || [];
+        if (images.length > 0) {
+          imagesContainer.innerHTML = images
+            .map(
+              (src) => `
+                    <div class="col-md-4 col-6">
+                        <img src="${src}" class="package-img" onclick="window.open(this.src)">
+                    </div>
+                `,
+            )
+            .join("");
+        }
+
+        // Map
+        const trackingMap = new TrackingMap("map-container");
+        await trackingMap.init();
+        setTimeout(() => trackingMap.updateLocation(pkg.lat, pkg.lng), 500);
+      }
+
+      window.addEventListener("load", init);
+    </script>
+  </body>
+</html>
