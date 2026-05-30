@@ -326,6 +326,17 @@
       import { TrackingDB } from "../static/assets/js/tracking/db.js";
       import { TrackingMap } from "../static/assets/js/tracking/map.js";
 
+      function formatCurrencyAmount(amount, currencyCode = "USD") {
+        try {
+          return new Intl.NumberFormat(undefined, {
+            style: "currency",
+            currency: currencyCode,
+          }).format(Number(amount) || 0);
+        } catch (error) {
+          return `${currencyCode} ${(Number(amount) || 0).toLocaleString()}`;
+        }
+      }
+
       async function init() {
         const params = new URLSearchParams(window.location.search);
         const codeParam = params.get("code");
@@ -372,15 +383,18 @@
           pkg.itemsDescription || "N/A";
 
         // Payment
-        document.getElementById("pay-paid").textContent =
-          `$${(pkg.paymentPaid || 0).toLocaleString()}`;
+        const currencyCode = (pkg.currency || "USD").toUpperCase();
+        document.getElementById("pay-paid").textContent = formatCurrencyAmount(
+          pkg.paymentPaid || 0,
+          currencyCode,
+        );
         document.getElementById("pay-balance").textContent =
-          `$${(pkg.paymentBalance || 0).toLocaleString()}`;
+          formatCurrencyAmount(pkg.paymentBalance || 0, currencyCode);
 
         if (pkg.onHold) {
           document.getElementById("hold-notice").style.display = "block";
           document.getElementById("hold-amount").textContent =
-            `$${(pkg.paymentHoldAmount || 0).toLocaleString()}`;
+            formatCurrencyAmount(pkg.paymentHoldAmount || 0, currencyCode);
           document.getElementById("status-text").classList.add("text-danger");
         }
 

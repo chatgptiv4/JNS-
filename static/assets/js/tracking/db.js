@@ -65,6 +65,7 @@ function localPackageSave(packageData) {
   const data = {
     ...packageData,
     code,
+    currency: (packageData.currency || "USD").toUpperCase(),
     updatedAt: new Date().toISOString(),
   };
   packages[code] = data;
@@ -97,6 +98,7 @@ export const TrackingDB = {
             customerContact: "+1 (555) 000-1111",
             deliveryAddress: "123 Logistics Way, Brooklyn, NY 11201",
             itemsDescription: "Electronics, MacBook Pro, and Accessories",
+            currency: "USD",
             paymentPaid: 1500,
             paymentBalance: 200,
             paymentHoldAmount: 0,
@@ -128,6 +130,7 @@ export const TrackingDB = {
             customerContact: "+1 (555) 000-1111",
             deliveryAddress: "123 Logistics Way, Brooklyn, NY 11201",
             itemsDescription: "Electronics, MacBook Pro, and Accessories",
+            currency: "USD",
             paymentPaid: 1500,
             paymentBalance: 200,
             paymentHoldAmount: 0,
@@ -181,6 +184,7 @@ export const TrackingDB = {
     const data = {
       ...packageData,
       code: code,
+      currency: (packageData.currency || "USD").toUpperCase(),
       updatedAt: new Date().toISOString(),
     };
 

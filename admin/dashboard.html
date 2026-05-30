@@ -562,10 +562,20 @@
 
                 <!-- Payment Tab -->
                 <div class="tab-pane fade" id="tab-payment">
+                  <div class="mb-3">
+                    <label class="form-label fw-600" for="pkg-currency"
+                      >Currency for this shipment</label
+                    >
+                    <select id="pkg-currency" class="form-select"></select>
+                    <small class="text-muted">
+                      The selected currency will be used for all payment values
+                      on this shipment.
+                    </small>
+                  </div>
                   <div class="row g-3 mb-3">
                     <div class="col-md-6">
                       <label class="form-label fw-600"
-                        >Amount Already Paid ($)</label
+                        >Amount Already Paid</label
                       >
                       <input
                         type="number"
@@ -576,7 +586,7 @@
                     </div>
                     <div class="col-md-6">
                       <label class="form-label fw-600"
-                        >Outstanding Balance ($)</label
+                        >Outstanding Balance</label
                       >
                       <input
                         type="number"
@@ -588,7 +598,7 @@
                   </div>
                   <div class="mb-3">
                     <label class="form-label fw-600"
-                      >Amount Required for Release ($)</label
+                      >Amount Required for Release</label
                     >
                     <input
                       type="number"
@@ -686,6 +696,57 @@
       let currentImages = [];
       let currentLogs = [];
 
+      const currencyDisplayNames = new Intl.DisplayNames(["en"], {
+        type: "currency",
+      });
+
+      function populateCurrencyOptions() {
+        const currencySelect = document.getElementById("pkg-currency");
+        if (!currencySelect) return;
+
+        const fallbackCurrencies = [
+          "USD",
+          "EUR",
+          "GBP",
+          "JPY",
+          "AUD",
+          "CAD",
+          "CHF",
+          "CNY",
+          "INR",
+          "NGN",
+          "KES",
+          "ZAR",
+          "AED",
+          "SAR",
+        ];
+
+        const supportedCurrencies =
+          typeof Intl.supportedValuesOf === "function"
+            ? Intl.supportedValuesOf("currency")
+            : fallbackCurrencies;
+
+        const currencies = [
+          ...new Set([...supportedCurrencies, ...fallbackCurrencies]),
+        ].sort();
+
+        currencySelect.innerHTML = "";
+        currencies.forEach((currency) => {
+          const option = document.createElement("option");
+          option.value = currency;
+          option.textContent = `${currency} - ${currencyDisplayNames.of(currency) || currency}`;
+          currencySelect.appendChild(option);
+        });
+
+        if (currencySelect.querySelector('option[value="USD"]')) {
+          currencySelect.value = "USD";
+        } else if (currencySelect.options.length) {
+          currencySelect.selectedIndex = 0;
+        }
+      }
+
+      populateCurrencyOptions();
+
       async function renderPackages() {
         const list = document.getElementById("package-list");
         const packages = await TrackingDB.getAll();
@@ -782,6 +843,9 @@
           currentImages = [];
           currentLogs = [];
 
+          populateCurrencyOptions();
+          document.getElementById("pkg-currency").value = "USD";
+
           // Add one default log
           addLogEntry(new Date().toISOString(), "Pending", "Shipment Created");
         });
@@ -859,6 +923,9 @@
             lat: parseFloat(document.getElementById("loc-lat").value),
             lng: parseFloat(document.getElementById("loc-lng").value),
             onHold: document.getElementById("on-hold-toggle").checked,
+            currency: (
+              document.getElementById("pkg-currency").value || "USD"
+            ).toUpperCase(),
             paymentPaid: parseFloat(document.getElementById("pay-paid").value),
             paymentBalance: parseFloat(
               document.getElementById("pay-balance").value,
@@ -930,6 +997,10 @@
           document.getElementById("loc-lng").value = pkg.lng || 0;
           document.getElementById("on-hold-toggle").checked =
             pkg.onHold || false;
+          populateCurrencyOptions();
+          document.getElementById("pkg-currency").value = (
+            pkg.currency || "USD"
+          ).toUpperCase();
           document.getElementById("pay-paid").value = pkg.paymentPaid || 0;
           document.getElementById("pay-balance").value =
             pkg.paymentBalance || 0;
