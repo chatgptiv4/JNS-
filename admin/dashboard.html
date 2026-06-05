@@ -347,6 +347,7 @@
                     <tr>
                       <th>Code</th>
                       <th>Location</th>
+                      <th>Route</th>
                       <th>Status</th>
                       <th>Last Update</th>
                       <th class="text-end">Actions</th>
@@ -520,6 +521,38 @@
                       />
                     </div>
                   </div>
+                  <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label fw-600">Freight Type</label>
+                      <select id="freight-type" class="form-select">
+                        <option value="Road Freight">Road Freight</option>
+                        <option value="Air Freight">Air Freight</option>
+                        <option value="Ocean Freight">Ocean Freight</option>
+                        <option value="Express Courier">Express Courier</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label fw-600">Route Progress (%)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        id="progress-percent"
+                        class="form-control"
+                        value="35"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-600">Origin / From Address</label>
+                    <textarea
+                      id="origin-address"
+                      class="form-control"
+                      rows="2"
+                      placeholder="Pickup address or origin facility"
+                    ></textarea>
+                  </div>
                   <div class="row g-3">
                     <div class="col-6">
                       <label class="form-label fw-600">Latitude</label>
@@ -543,6 +576,10 @@
                         required
                       />
                     </div>
+                  </div>
+                  <div class="mt-3">
+                    <label class="form-label fw-600">Arrival Date</label>
+                    <input type="date" id="arrival-date" class="form-control" />
                   </div>
                   <div class="mt-3">
                     <div class="form-check form-switch">
@@ -586,7 +623,7 @@
                     </div>
                     <div class="col-md-6">
                       <label class="form-label fw-600"
-                        >Outstanding Balance</label
+                        >Pending Fee / Balance</label
                       >
                       <input
                         type="number"
@@ -595,6 +632,18 @@
                         value="0"
                       />
                     </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label fw-600">Total Shipment Fee</label>
+                    <input
+                      type="number"
+                      id="pay-total"
+                      class="form-control"
+                      value="0"
+                    />
+                    <small class="text-muted"
+                      >Shown as the main fee on the customer tracking page.</small
+                    >
                   </div>
                   <div class="mb-3">
                     <label class="form-label fw-600"
@@ -762,6 +811,10 @@
                         <div>${pkg.locationName}</div>
                         <div class="text-muted small">${pkg.lat}, ${pkg.lng}</div>
                     </td>
+                    <td data-label="Route">
+                        <div>${pkg.freightType || "Road Freight"}</div>
+                        <div class="text-muted small">${pkg.progressPercent ?? 35}% complete</div>
+                    </td>
                     <td data-label="Status">
                         <span class="status-badge ${getStatusClass(pkg.status, pkg.onHold)}">
                             ${pkg.onHold ? "ON HOLD" : pkg.status}
@@ -822,9 +875,20 @@
           return "Current location name is required.";
         if (Number.isNaN(data.lat) || Number.isNaN(data.lng))
           return "Valid latitude and longitude are required.";
+        if (
+          Number.isNaN(data.progressPercent) ||
+          data.progressPercent < 0 ||
+          data.progressPercent > 100
+        )
+          return "Route progress must be between 0 and 100.";
         if (data.onHold && Number.isNaN(data.paymentHoldAmount))
           return "Hold release amount must be a number.";
         return null;
+      }
+
+      function numberValue(id, fallback = 0) {
+        const value = parseFloat(document.getElementById(id).value);
+        return Number.isNaN(value) ? fallback : value;
       }
 
       // Reset form for new shipment
@@ -842,6 +906,10 @@
           document.getElementById("logs-container").innerHTML = "";
           currentImages = [];
           currentLogs = [];
+          document.getElementById("progress-percent").value = 35;
+          document.getElementById("origin-address").value = "";
+          document.getElementById("arrival-date").value = "";
+          document.getElementById("freight-type").value = "Road Freight";
 
           populateCurrencyOptions();
           document.getElementById("pkg-currency").value = "USD";
@@ -920,19 +988,21 @@
             itemsDescription: document.getElementById("pkg-desc").value,
             status: document.getElementById("pkg-status").value,
             locationName: document.getElementById("loc-name").value,
-            lat: parseFloat(document.getElementById("loc-lat").value),
-            lng: parseFloat(document.getElementById("loc-lng").value),
+            freightType: document.getElementById("freight-type").value,
+            originAddress: document.getElementById("origin-address").value,
+            progressPercent: numberValue("progress-percent", 35),
+            arrivalDate: document.getElementById("arrival-date").value,
+            lat: numberValue("loc-lat"),
+            lng: numberValue("loc-lng"),
             onHold: document.getElementById("on-hold-toggle").checked,
             currency: (
               document.getElementById("pkg-currency").value || "USD"
             ).toUpperCase(),
-            paymentPaid: parseFloat(document.getElementById("pay-paid").value),
-            paymentBalance: parseFloat(
-              document.getElementById("pay-balance").value,
-            ),
-            paymentHoldAmount: parseFloat(
-              document.getElementById("pay-hold").value,
-            ),
+            paymentPaid: numberValue("pay-paid"),
+            paymentBalance: numberValue("pay-balance"),
+            pendingFee: numberValue("pay-balance"),
+            totalFee: numberValue("pay-total"),
+            paymentHoldAmount: numberValue("pay-hold"),
             movementLogs: logs,
             images: currentImages,
           };
@@ -993,6 +1063,14 @@
           document.getElementById("pkg-status").value =
             pkg.status || "In Transit";
           document.getElementById("loc-name").value = pkg.locationName || "";
+          document.getElementById("freight-type").value =
+            pkg.freightType || "Road Freight";
+          document.getElementById("origin-address").value =
+            pkg.originAddress || "";
+          document.getElementById("progress-percent").value =
+            pkg.progressPercent ?? 35;
+          document.getElementById("arrival-date").value =
+            pkg.arrivalDate || "";
           document.getElementById("loc-lat").value = pkg.lat || 0;
           document.getElementById("loc-lng").value = pkg.lng || 0;
           document.getElementById("on-hold-toggle").checked =
@@ -1003,7 +1081,8 @@
           ).toUpperCase();
           document.getElementById("pay-paid").value = pkg.paymentPaid || 0;
           document.getElementById("pay-balance").value =
-            pkg.paymentBalance || 0;
+            pkg.pendingFee ?? pkg.paymentBalance ?? 0;
+          document.getElementById("pay-total").value = pkg.totalFee || 0;
           document.getElementById("pay-hold").value =
             pkg.paymentHoldAmount || 0;
 

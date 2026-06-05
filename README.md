@@ -1,104 +1,107 @@
-# JNS Express Delivery - Professional Logistics Portfolio
+# JNS express delivery
 
-JNS Express Delivery is a high-end logistics and freight forwarding website designed for a professional portfolio. It features a modern design, a custom tracking system with real-time Google Maps integration, and a secure admin management portal.
+Static logistics portfolio website with a Firebase-backed package tracking dashboard.
 
-## 🎨 Branding & Visuals
-- **Primary Colors**: Professional Blue, Clean White, and Energetic Orange.
-- **Visual Identity**: The site uses CSS filters to maintain a consistent "Mood Board" across all images, shifting original reds to professional oranges and blues.
+## Main Pages
 
-## 🚀 Key Features
+- `index.html` - public homepage.
+- `track-shipping/index.html` - customer tracking-code lookup page.
+- `track-shipping/details.html` - shipment details page with animated route tracking.
+- `admin/index.html` - admin login page.
+- `admin/dashboard.html` - shipment management dashboard.
+- `static/assets/js/tracking/db.js` - Firebase Realtime Database integration.
 
-### 1. Advanced Package Management & Tracking
-- **Full Tracking Cycle**: From code entry to detailed shipment visualization.
-- **Verification Loader**: A realistic, multi-step verification animation that simulates global logistics database syncing.
-- **Detailed Results Page**: Located at `/track-shipping/details.html`, showing:
-    - **Customer Info**: Full name, contact, and address.
-    - **Package Documentation**: Description of items and up to 3 attached photos.
-    - **Payment Portal**: Dynamic display of "Paid", "Balance", and "Hold Release Fees".
-    - **Live Timeline**: A professional vertical timeline of movement logs (Timestamp, Location, Status).
-    - **Interactive Map**: Real-time Google Map showing the current location.
+## Admin Login
 
-### 2. Upgraded Admin Dashboard
-Located at `/admin/dashboard.html`.
-- **Comprehensive Management**: Full CRUD (Create, Read, Update, Delete) capabilities for shipments.
-- **Dynamic Field Control**:
-    - Edit customer details and delivery addresses.
-    - Update payment balances and set "On Hold" release amounts.
-    - Upload and manage package documentation images.
-    - Add real-time movement logs to the shipment history.
-- **Status Automation**: Easily switch between "In Transit", "Out for Delivery", "Delivered", and "On Hold".
-- **Responsive Controls**: Fully optimized for management on both mobile and desktop.
-- **Security**: Protected by session-based authentication with a 30-minute auto-expiry.
-- **Credentials**: 
-  - **Username**: `admin`
-  - **Password**: `jns2026`
+- URL: `/admin/`
+- Username: `admin`
+- Password: `jns2026`
 
-### 3. Customer Interaction
-- **Live Chat**: Integrated with Smartsupp for real-time customer support.
-- **Responsive Design**: Fully optimized for mobile, tablet, and desktop viewing.
-- **Preloader**: A custom "JNS" branded preloader ensures a smooth entrance.
+This is front-end demo authentication. For real production use, move admin auth to Firebase Authentication or a server-side backend.
 
----
+## Tracking System
 
-## 📂 Project Structure
+Admins create and edit shipments from the dashboard. Each shipment can include:
 
-- `index.html`: The main landing page.
-- `/track-shipping/`:
-  - `index.html`: The tracking search interface with professional loader.
-  - `details.html`: The detailed shipment results page.
-- `/admin/`:
-  - `index.html`: Admin login page.
-  - `dashboard.html`: The advanced shipment management interface.
-- `/static/assets/`:
-  - `css/`: Theming and layout styles.
-  - `js/tracking/`:
-    - `db.js`: The core Firebase engine.
-    - `map.js`: Google Maps integration module.
+- Tracking code
+- Customer name and contact
+- Delivery address
+- Package description
+- Freight type
+- Origin/from address
+- Current location name
+- Route progress percentage
+- Arrival date
+- Currency
+- Total shipment fee
+- Pending fee/balance
+- Hold release fee
+- Movement logs
+- Up to 3 package images
 
----
+Customers enter a tracking code at `/track-shipping/`. If the code exists, they are redirected to `/track-shipping/details.html?code=TRACKING_CODE`.
 
-## 🛠️ How It Works (Technical Details)
+The details page uses a branded animated route line as the visual tracker. The delivery vehicle moves along the route based on the admin-controlled progress percentage. Package images appear below the route.
 
-### Data Management (`db.js` + Firebase)
-The system is powered by **Firebase Realtime Database**, allowing for:
-- **Cross-Device Sync**: Create a package on your laptop and track it on your phone instantly.
-- **Persistent Storage**: Data remains safe and secure even after browser restarts.
-- **Real-time Updates**: Status changes in the admin panel reflect for customers immediately.
+## Package Hold Logic
 
-### Verification Engine
-The tracking page uses an `async` sequence to simulate verification steps (Connecting, Authenticating, Retrieving). This adds a level of professionalism and realism to the user experience.
+If the admin places a shipment on hold:
 
----
+- The customer details page displays an on-hold status.
+- A hold notice appears with the support email.
+- The route remains visible, but the status and fee information clearly show the hold condition.
 
-## 🔗 Connections & Setup (Step-by-Step)
+## Firebase Setup
 
-### Step 0: Firebase Backend Setup (REQUIRED)
-1. Go to the [Firebase Console](https://console.firebase.google.com/).
-2. Create a project and register a **Web App**.
-3. Copy the `firebaseConfig` object and paste it into `static/assets/js/tracking/db.js`.
-4. Enable **Realtime Database** in "Test Mode".
+The site currently uses Firebase Realtime Database through `static/assets/js/tracking/db.js`.
 
-### Step 1: Google Maps API Key (REQUIRED)
-1. Get a key from [Google Cloud Console](https://console.cloud.google.com/) for "Maps JavaScript API".
-2. Replace `YOUR_GOOGLE_MAPS_API_KEY` in:
-    - `track-shipping/index.html`
-    - `track-shipping/details.html`
+1. Go to Firebase Console.
+2. Create or open your Firebase project.
+3. Enable **Realtime Database**.
+4. Copy your web app `firebaseConfig`.
+5. Replace the config object in `static/assets/js/tracking/db.js`.
+6. Set secure database rules before using real customer data.
 
-### Step 2: Form Handling (Contact/Newsletter)
-The current forms are visual templates. To make them send real emails:
-1. **Newsletter**: In `index.html`, find the `<form class="subscribe-form">`. Replace the `action="#"` with your Mailchimp or Formspree URL.
-2. **Contact**: The "Help" and "Support" links are currently `mailto:` links. You can change these to point to a contact form or a specific CRM.
+For quick testing, Firebase test mode works, but do not leave public write access enabled for real deployment.
 
-### Step 3: Live Chat Configuration
-The site uses Smartsupp. To use your own account:
-1. Sign up at [Smartsupp.com](https://www.smartsupp.com/).
-2. Copy your unique **Key**.
-3. Open `index.html` and `track-shipping/index.html`.
-4. Replace the `_smartsupp.key` value with your own key.
+## Chat Setup
 
-### Step 4: Domain Customization
-- All support emails are currently set to `support@jns-expressdelivery.com`. 
-- To change this globally, use a "Find and Replace" in your editor to swap it with your actual domain email.
+Smartsupp chat is embedded in the public pages.
 
-### Step 5: Deployment
-This is a static website. You can host it for free on **GitHub Pages**, **Netlify**, or **Vercel**. Simply upload the entire folder, and it will work immediately.
+To use your own account:
+
+1. Create a Smartsupp account.
+2. Copy your Smartsupp key.
+3. Replace `_smartsupp.key` in `index.html` and `track-shipping/index.html`.
+
+## Support Email
+
+Current support email:
+
+`support@jns-expressdelivery.com`
+
+Change it globally if your final domain email is different.
+
+## Deployment
+
+This is a static site and can be deployed to Vercel, Netlify, or GitHub Pages.
+
+For Vercel:
+
+1. Upload or push this folder to GitHub.
+2. Import the project in Vercel.
+3. Use the default static deployment settings.
+4. After deploying, test:
+   - `/`
+   - `/track-shipping/`
+   - `/admin/`
+   - `/track-shipping/details.html?code=JNS123456789`
+
+## Pre-Launch Checklist
+
+- Replace Firebase config if needed.
+- Restrict Firebase database rules.
+- Confirm Smartsupp key belongs to you.
+- Confirm support email exists.
+- Create at least one shipment from the admin dashboard.
+- Test tracking on desktop and mobile.

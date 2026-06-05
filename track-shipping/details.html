@@ -7,7 +7,7 @@
     <link
       rel="shortcut icon"
       type="image/x-icon"
-      href="../static/assets/img/favicon.673237fd26f4.png"
+      href="../static/assets/img/logo.ba5f83f6d297.png"
     />
     <link
       rel="stylesheet"
@@ -17,314 +17,830 @@
       rel="stylesheet"
       href="../static/assets/lib/font-awesome-pro/css/fontawesome.min.7d3db9a481ee.css"
     />
-    <link
-      rel="stylesheet"
-      href="../static/assets/css/common-style.ce230ada3bee.css"
-    />
-    <link rel="stylesheet" href="../static/assets/css/main.0076aaf87a3e.css" />
 
     <style>
       :root {
         --jns-orange: #ff8c00;
-        --bg-dark: #0b0b0c;
+        --jns-blue: #05233e;
+        --jns-green: #18b878;
+        --jns-red: #ef4444;
+        --jns-yellow: #f4b321;
+        --ink: #07162d;
+        --muted: #64748b;
+        --line: #e8edf4;
+        --panel: #ffffff;
+        --page: #090d12;
       }
+
+      * {
+        box-sizing: border-box;
+      }
+
       body {
-        background: #f8f9fa;
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at top left, rgba(255, 140, 0, 0.12), transparent 34rem),
+          linear-gradient(135deg, #090d12 0%, #101820 52%, #070a0f 100%);
+        color: var(--ink);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
-      .details-header {
-        background: var(--bg-dark);
-        color: white;
-        padding: 60px 0;
-        margin-bottom: -50px;
+
+      a {
+        color: inherit;
       }
-      .status-card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        border: none;
-        overflow: hidden;
-        margin-bottom: 30px;
-      }
-      .status-header {
-        padding: 25px;
-        border-bottom: 1px solid #f0f0f0;
+
+      .top-bar {
+        width: min(860px, calc(100% - 28px));
+        margin: 22px auto 10px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        color: #fff;
       }
-      .info-label {
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #718096;
+
+      .brand {
+        font-size: 22px;
+        font-weight: 800;
+        text-decoration: none;
+        letter-spacing: 0;
+      }
+
+      .brand span {
+        color: var(--jns-orange);
+      }
+
+      .track-another {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        padding: 0 14px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 999px;
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px;
         font-weight: 700;
-        margin-bottom: 5px;
+        background: rgba(255, 255, 255, 0.06);
       }
-      .info-value {
-        font-size: 16px;
+
+      .tracking-shell {
+        width: min(860px, calc(100% - 28px));
+        margin: 0 auto 42px;
+        background: var(--panel);
+        border-radius: 14px;
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.34);
+        overflow: hidden;
+      }
+
+      .tracking-head {
+        padding: 18px 12px 8px;
+      }
+
+      .tracking-title {
+        margin: 0 0 4px;
+        font-size: clamp(21px, 3.8vw, 26px);
+        line-height: 1.08;
+        color: #061329;
+        font-weight: 900;
+      }
+
+      .tracking-title span {
+        color: #64748b;
+      }
+
+      .route-copy {
+        margin: 0;
+        color: #526274;
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 8px;
+        padding: 8px 13px;
+        border-radius: 999px;
+        background: #e9fbf3;
+        color: #04734a;
+        font-size: 11px;
+        font-weight: 800;
+      }
+
+      .status-pill.on-hold {
+        background: #fff1f1;
+        color: #b42318;
+      }
+
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: currentColor;
+      }
+
+      .tracking-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.24fr) minmax(300px, 0.9fr);
+        gap: 10px;
+        padding: 0 12px 12px;
+      }
+
+      .route-panel,
+      .summary-panel,
+      .timeline-panel {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
+        border: 1px solid rgba(226, 232, 240, 0.75);
+      }
+
+      .route-panel {
+        min-height: 422px;
+        padding: 26px 10px 14px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .route-visual {
+        position: relative;
+        min-height: 130px;
+        margin: 0 10px 10px;
+      }
+
+      .route-svg {
+        width: 100%;
+        height: 132px;
+        display: block;
+      }
+
+      .route-base {
+        fill: none;
+        stroke: #d0d6df;
+        stroke-width: 8;
+        stroke-linecap: round;
+      }
+
+      .route-progress {
+        fill: none;
+        stroke: var(--jns-green);
+        stroke-width: 8;
+        stroke-linecap: round;
+        filter: drop-shadow(0 6px 8px rgba(24, 184, 120, 0.2));
+        transition: stroke-dasharray 0.45s ease;
+      }
+
+      .route-label {
+        position: absolute;
+        top: 24px;
+        left: var(--label-left, 42%);
+        transform: translateX(-50%);
+        background: #051126;
+        color: #fff;
+        border-radius: 7px;
+        padding: 7px 10px;
+        font-size: 11px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .route-label:after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: -5px;
+        transform: translateX(-50%);
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 6px solid #051126;
+      }
+
+      .origin-pin,
+      .destination-pin,
+      .moving-truck {
+        position: absolute;
+        display: grid;
+        place-items: center;
+      }
+
+      .origin-pin {
+        left: 7%;
+        top: 74px;
+      }
+
+      .destination-pin {
+        right: 6%;
+        top: 26px;
+      }
+
+      .moving-truck {
+        left: 0;
+        top: 0;
+        width: 30px;
+        height: 22px;
+        color: #061329;
+        transform: translate(-50%, -50%);
+        z-index: 3;
+        filter: drop-shadow(0 5px 8px rgba(15, 23, 42, 0.18));
+      }
+
+      .pin-caption {
+        display: block;
+        margin-top: 2px;
+        font-size: 7px;
+        color: #07162d;
+        font-weight: 800;
+      }
+
+      .legend-row {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 8px 0 12px;
+        color: #526274;
+        font-size: 12px;
+      }
+
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+
+      .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        display: inline-block;
+      }
+
+      .legend-link {
+        margin-left: auto;
+        text-decoration: none;
+        color: #526274;
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .images-wrap {
+        margin-top: auto;
+        overflow: hidden;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        background: #f8fafc;
+        padding: 12px;
+      }
+
+      .images-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .images-title h3 {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 900;
+        color: #061329;
+      }
+
+      .images-title span {
+        font-size: 11px;
+        color: #64748b;
+      }
+
+      .product-images {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .product-image {
+        width: 100%;
+        aspect-ratio: 1.15 / 1;
+        object-fit: cover;
+        border-radius: 9px;
+        background: #e2e8f0;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+      }
+
+      .product-image:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 22px rgba(15, 23, 42, 0.12);
+      }
+
+      .image-empty {
+        grid-column: 1 / -1;
+        min-height: 140px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        border-radius: 9px;
+        border: 1px dashed #cbd5e1;
+        color: #64748b;
+        font-size: 13px;
+        background: #fff;
+      }
+
+      .hold-card {
+        display: none;
+        margin-top: auto;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        background: #fff5f5;
+        color: #991b1b;
+        padding: 18px;
+      }
+
+      .hold-card h3 {
+        margin: 0 0 7px;
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .hold-card p {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .summary-panel {
+        padding: 10px;
+      }
+
+      .cargo-top {
+        display: grid;
+        grid-template-columns: 90px minmax(0, 1fr);
+        gap: 10px;
+        align-items: start;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .cargo-img {
+        width: 90px;
+        aspect-ratio: 1 / 0.72;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #edf2f7;
+      }
+
+      .cargo-title {
+        margin: 2px 0 4px;
+        color: #061329;
+        font-size: 15px;
+        line-height: 1.2;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .cargo-meta {
+        margin: 0 0 8px;
+        color: #526274;
+        font-size: 12px;
+      }
+
+      .progress-mini {
+        height: 7px;
+        width: 100%;
+        max-width: 170px;
+        background: #edf1f5;
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .progress-mini span {
+        display: block;
+        height: 100%;
+        width: var(--progress, 35%);
+        background: linear-gradient(90deg, var(--jns-red), var(--jns-orange), var(--jns-green));
+      }
+
+      .progress-caption {
+        margin-top: 4px;
+        font-size: 11px;
+        color: #526274;
+      }
+
+      .detail-list {
+        display: grid;
+        gap: 9px;
+        padding-top: 13px;
+      }
+
+      .detail-row {
+        display: grid;
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 10px;
+        align-items: start;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .detail-label {
+        color: #53647a;
+      }
+
+      .detail-value {
+        color: #07162d;
         font-weight: 600;
-        color: #2d3748;
+        word-break: break-word;
       }
+
+      .extra-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 0 12px 12px;
+      }
+
+      .timeline-panel {
+        padding: 16px;
+      }
+
+      .timeline-title {
+        margin: 0 0 14px;
+        font-size: 15px;
+        font-weight: 900;
+      }
+
       .timeline {
         position: relative;
-        padding: 20px 0;
         list-style: none;
+        padding: 0;
+        margin: 0;
       }
+
       .timeline:before {
         content: "";
         position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 20px;
+        left: 8px;
+        top: 7px;
+        bottom: 8px;
         width: 2px;
         background: #e2e8f0;
       }
+
       .timeline-item {
         position: relative;
-        padding-left: 50px;
-        margin-bottom: 30px;
+        padding-left: 28px;
+        margin-bottom: 18px;
       }
+
+      .timeline-item:last-child {
+        margin-bottom: 0;
+      }
+
       .timeline-marker {
         position: absolute;
-        left: 12px;
-        top: 5px;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: white;
+        left: 1px;
+        top: 4px;
+        width: 16px;
+        height: 16px;
+        border-radius: 999px;
         border: 4px solid var(--jns-orange);
-        z-index: 1;
+        background: #fff;
       }
+
       .timeline-item.active .timeline-marker {
         background: var(--jns-orange);
-        box-shadow: 0 0 0 5px rgba(255, 140, 0, 0.2);
+        box-shadow: 0 0 0 5px rgba(255, 140, 0, 0.14);
       }
-      .timeline-content h6 {
-        margin-bottom: 2px;
-        font-weight: 700;
+
+      .timeline h4 {
+        margin: 0 0 3px;
+        font-size: 13px;
+        font-weight: 800;
       }
-      .timeline-content span {
+
+      .timeline p {
+        margin: 0;
+        color: #526274;
         font-size: 12px;
-        color: #718096;
+        line-height: 1.45;
       }
 
-      #map-container {
-        width: 100%;
-        height: 400px;
-        background: #eee;
-      }
-      .hold-alert {
-        background: #fff5f5;
-        border: 1px solid #feb2b2;
-        color: #c53030;
-        padding: 20px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-      }
-      .package-img {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        border-radius: 10px;
-        margin-bottom: 15px;
-        cursor: pointer;
-        transition: transform 0.3s;
-      }
-      .package-img:hover {
-        transform: scale(1.02);
+      .support-panel {
+        padding: 16px;
+        border-radius: 12px;
+        background: #07162d;
+        color: #fff;
       }
 
-      .payment-stat {
-        text-align: center;
-        padding: 15px;
-        background: #f8f9fa;
-        border-radius: 10px;
+      .support-panel h3 {
+        margin: 0 0 7px;
+        font-size: 15px;
+        font-weight: 900;
       }
-      .payment-stat.highlight {
-        background: #fffaf0;
-        border: 1px solid #feebc8;
+
+      .support-panel p {
+        margin: 0 0 14px;
+        color: rgba(255, 255, 255, 0.72);
+        font-size: 12px;
+        line-height: 1.55;
+      }
+
+      .support-btn {
+        display: inline-flex;
+        width: 100%;
+        min-height: 40px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: var(--jns-orange);
+        color: #111827;
+        text-decoration: none;
+        font-weight: 900;
+        font-size: 13px;
+      }
+
+      .error-box {
+        margin: 0 12px 18px;
+        padding: 16px;
+        border-radius: 10px;
+        background: #fff7ed;
+        color: #9a3412;
+        border: 1px solid #fed7aa;
+        display: none;
+      }
+
+      @media (max-width: 860px) {
+        .tracking-grid,
+        .extra-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .route-panel {
+          min-height: auto;
+        }
+
+        .legend-link {
+          width: 100%;
+          margin-left: 0;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .top-bar {
+          margin-top: 14px;
+        }
+
+        .brand {
+          font-size: 19px;
+        }
+
+        .track-another {
+          font-size: 12px;
+          padding: 0 11px;
+        }
+
+        .tracking-shell {
+          width: calc(100% - 18px);
+          border-radius: 12px;
+        }
+
+        .tracking-head {
+          padding: 16px 10px 8px;
+        }
+
+        .tracking-grid,
+        .extra-grid {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        .route-panel {
+          padding-top: 20px;
+        }
+
+        .route-visual {
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+        .route-label {
+          top: 18px;
+          font-size: 10px;
+        }
+
+        .cargo-top {
+          grid-template-columns: 78px minmax(0, 1fr);
+        }
+
+        .cargo-img {
+          width: 78px;
+        }
+
+        .detail-row {
+          grid-template-columns: 88px minmax(0, 1fr);
+          gap: 8px;
+          font-size: 12px;
+        }
+
+        .product-images {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
 
   <body>
-    <header
-      class="main-header"
-      style="position: relative; background: var(--bg-dark)"
-    >
-      <div class="container">
-        <div class="main-header-wapper">
-          <div class="site-logo">
-            <a
-              href="../index.html"
-              style="
-                font-size: 24px;
-                font-weight: 700;
-                color: #fff;
-                text-decoration: none;
-              "
-              >JNS<span style="color: #ff8c00">delivery</span></a
-            >
-          </div>
-          <div class="header-menu-wrap">
-            <ul class="nav-menu">
-              <li><a href="../index.html">Home</a></li>
-              <li><a href="index.html">Track Another</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    <div class="details-header text-center">
-      <div class="container">
-        <h1 class="fw-bold mb-2">Shipment Tracking</h1>
-        <p class="opacity-75">
-          Tracking ID:
-          <span id="display-code" class="text-warning">Loading...</span>
-        </p>
-        <div
-          id="details-error"
-          class="alert alert-warning mt-3"
-          style="display: none"
-        >
-          Unable to load this shipment. Please check your tracker code or return
-          to the tracking page.
-        </div>
-      </div>
+    <div class="top-bar">
+      <a href="../index.html" class="brand">JNS<span>delivery</span></a>
+      <a href="index.html" class="track-another">Track another</a>
     </div>
 
-    <div class="container pb-5">
-      <div class="row">
-        <!-- Left Column: Status & Details -->
-        <div class="col-lg-8">
-          <div class="status-card">
-            <div class="status-header">
-              <div>
-                <span class="info-label">Current Status</span>
-                <h4 id="status-text" class="fw-bold mb-0">---</h4>
-              </div>
-              <div class="text-end">
-                <span class="info-label">Last Updated</span>
-                <div id="update-time" class="info-value">---</div>
-              </div>
-            </div>
-
-            <div id="hold-notice" style="display: none" class="p-4 pt-0">
-              <div class="hold-alert mt-4">
-                <div class="d-flex align-items-center">
-                  <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
-                  <div>
-                    <h5 class="fw-bold mb-1">Package On Hold</h5>
-                    <p class="mb-0">
-                      A release fee of <strong id="hold-amount">$0</strong> is
-                      required before delivery can proceed. Please contact
-                      support.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="p-4">
-              <div class="row g-4">
-                <div class="col-md-6">
-                  <div class="info-label">Receiver</div>
-                  <div id="cust-name" class="info-value">---</div>
-                  <div id="cust-contact" class="small text-muted">---</div>
-                </div>
-                <div class="col-md-6">
-                  <div class="info-label">Delivery Address</div>
-                  <div id="cust-address" class="info-value small">---</div>
-                </div>
-                <div class="col-12">
-                  <div class="info-label">Items Description</div>
-                  <div
-                    id="pkg-desc"
-                    class="info-value small bg-light p-3 rounded"
-                  >
-                    ---
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Map Section -->
-            <div id="map-section">
-              <div id="map-container"></div>
-            </div>
-          </div>
-
-          <!-- Product Images -->
-          <div class="status-card p-4">
-            <h5 class="fw-bold mb-4">Package Documentation</h5>
-            <div class="row g-3" id="images-container">
-              <!-- Images here -->
-              <div class="col-12 text-center text-muted py-4">
-                No images attached to this shipment.
-              </div>
-            </div>
-          </div>
+    <main class="tracking-shell">
+      <section class="tracking-head">
+        <h1 class="tracking-title">
+          Tracking: <span id="display-code">Loading...</span>
+        </h1>
+        <p class="route-copy" id="route-copy">Loading shipment route...</p>
+        <div class="status-pill" id="status-pill">
+          <span class="status-dot"></span>
+          <span id="status-pill-text">Checking</span>
         </div>
+      </section>
 
-        <!-- Right Column: Timeline & Payment -->
-        <div class="col-lg-4">
-          <!-- Payment Card -->
-          <div class="status-card p-4">
-            <h5 class="fw-bold mb-4">Payment Summary</h5>
-            <div class="row g-2">
-              <div class="col-6">
-                <div class="payment-stat">
-                  <div class="info-label">Paid</div>
-                  <div id="pay-paid" class="fw-bold text-success">$0</div>
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="payment-stat highlight">
-                  <div class="info-label">Balance</div>
-                  <div id="pay-balance" class="fw-bold text-danger">$0</div>
-                </div>
-              </div>
+      <div id="details-error" class="error-box">
+        Unable to load this shipment. Please return to the tracking page and try
+        again.
+      </div>
+
+      <section class="tracking-grid" id="details-content" style="display: none">
+        <article class="route-panel">
+          <div class="route-visual" id="route-visual">
+            <svg
+              class="route-svg"
+              viewBox="0 0 520 160"
+              aria-label="Shipment route progress"
+              role="img"
+            >
+              <path
+                class="route-base"
+                pathLength="100"
+                d="M42 118 C132 95 190 74 254 74 C319 74 334 94 405 72 C442 60 472 42 497 30"
+              />
+              <path
+                class="route-progress"
+                id="route-progress"
+                pathLength="100"
+                d="M42 118 C132 95 190 74 254 74 C319 74 334 94 405 72 C442 60 472 42 497 30"
+              />
+            </svg>
+            <div class="route-label" id="route-label">In Transit - 35%</div>
+            <div class="origin-pin">
+              <i class="fas fa-location-dot"></i>
+              <span class="pin-caption">Origin</span>
+            </div>
+            <div class="moving-truck" id="moving-truck" aria-hidden="true">
+              <svg viewBox="0 0 60 38" width="30" height="22">
+                <path d="M4 10h31v17H4z" fill="#061329" />
+                <path d="M35 15h10l8 7v5H35z" fill="#ff8c00" />
+                <circle cx="15" cy="29" r="5" fill="#061329" stroke="#fff" stroke-width="2" />
+                <circle cx="43" cy="29" r="5" fill="#061329" stroke="#fff" stroke-width="2" />
+                <path d="M39 17h5l5 5H39z" fill="#fff" opacity=".9" />
+              </svg>
+            </div>
+            <div class="destination-pin">
+              <i class="fas fa-flag"></i>
+              <span class="pin-caption">Destination</span>
             </div>
           </div>
 
-          <!-- Timeline Card -->
-          <div class="status-card p-4">
-            <h5 class="fw-bold mb-4">Movement Logs</h5>
-            <ul class="timeline" id="logs-list">
-              <!-- Logs here -->
-            </ul>
+          <div class="legend-row">
+            <span class="legend-item">
+              <span class="legend-dot" style="background: var(--jns-red)"></span>
+              Hold
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot" style="background: var(--jns-yellow)"></span>
+              Delayed
+            </span>
+            <span class="legend-item">
+              <span class="legend-dot" style="background: var(--jns-green)"></span>
+              Moving / Delivered
+            </span>
+            <a class="legend-link" href="mailto:support@jns-expressdelivery.com">
+              i&nbsp; Insurance & Tracking Fee
+            </a>
           </div>
 
-          <div class="status-card p-4 bg-dark text-white">
-            <h6 class="fw-bold mb-3">Need Assistance?</h6>
-            <p class="small opacity-75">
-              Our 24/7 logistics support team is ready to help you with any
-              questions regarding your shipment.
+          <div class="hold-card" id="hold-card">
+            <h3>Your package is currently on hold.</h3>
+            <p>
+              Please contact our customer support team at
+              support@jns-expressdelivery.com for further assistance.
             </p>
-            <a
-              href="mailto:support@jns-expressdelivery.com"
-              class="btn btn-warning btn-sm w-100 fw-bold"
-              >Contact Support</a
-            >
           </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Google Maps API -->
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBnFIBusuQrnn5V8t89I4cXTOfGvO0IysM&callback=initMapPlaceholder"
-      async
-      defer
-    ></script>
-    <script>
-      window.initMapPlaceholder = () => {};
-    </script>
+          <div class="images-wrap" id="images-wrap">
+            <div class="images-title">
+              <h3>Package Documentation</h3>
+              <span id="image-count">0 images</span>
+            </div>
+            <div class="product-images" id="product-images"></div>
+          </div>
+        </article>
+
+        <aside class="summary-panel">
+          <div class="cargo-top">
+            <img
+              src="../static/assets/img/post-2.f42370583e76.jpg"
+              alt="Package documentation"
+              class="cargo-img"
+              id="cargo-img"
+            />
+            <div>
+              <h2 class="cargo-title" id="cargo-title">Shipment Package</h2>
+              <p class="cargo-meta" id="cargo-meta">Road Freight - Checking</p>
+              <div class="progress-mini" id="progress-mini">
+                <span></span>
+              </div>
+              <div class="progress-caption" id="progress-caption">
+                35% complete
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-list">
+            <div class="detail-row">
+              <div class="detail-label">Tracking Code</div>
+              <div class="detail-value" id="detail-code">---</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">Customer</div>
+              <div class="detail-value" id="cust-name">---</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">Email / Phone</div>
+              <div class="detail-value" id="cust-contact">---</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">From</div>
+              <div class="detail-value" id="from-address">---</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">To</div>
+              <div class="detail-value" id="to-address">---</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">Address</div>
+              <div class="detail-value" id="delivery-address">---</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">Fee</div>
+              <div class="detail-value" id="fee-value">---</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">Pending Fee</div>
+              <div class="detail-value" id="pending-fee">---</div>
+            </div>
+            <div class="detail-row">
+              <div class="detail-label">Arrival Date</div>
+              <div class="detail-value" id="arrival-date">---</div>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="extra-grid" id="extra-content" style="display: none">
+        <article class="timeline-panel">
+          <h3 class="timeline-title">Movement Logs</h3>
+          <ul class="timeline" id="logs-list"></ul>
+        </article>
+
+        <aside class="support-panel">
+          <h3>Need Assistance?</h3>
+          <p>
+            Our logistics support team can help with hold notices, release fees,
+            route updates, and delivery questions.
+          </p>
+          <a href="mailto:support@jns-expressdelivery.com" class="support-btn">
+            Contact Support
+          </a>
+        </aside>
+      </section>
+    </main>
 
     <script type="module">
       import { TrackingDB } from "../static/assets/js/tracking/db.js";
-      import { TrackingMap } from "../static/assets/js/tracking/map.js";
+
+      function text(value, fallback = "---") {
+        return value === undefined || value === null || value === ""
+          ? fallback
+          : String(value);
+      }
 
       function formatCurrencyAmount(amount, currencyCode = "USD") {
         try {
@@ -337,110 +853,206 @@
         }
       }
 
+      function formatDate(value, options = {}) {
+        const date = value ? new Date(value) : null;
+        if (!date || Number.isNaN(date.getTime())) return "---";
+        return date.toLocaleString(undefined, options);
+      }
+
+      function addDays(value, days) {
+        const date = value ? new Date(value) : new Date();
+        date.setDate(date.getDate() + days);
+        return date;
+      }
+
+      function getProgress(pkg) {
+        if (Number.isFinite(Number(pkg.progressPercent))) {
+          return Number(pkg.progressPercent);
+        }
+        if (pkg.onHold) return 12;
+        const status = (pkg.status || "").toLowerCase();
+        if (status.includes("delivered")) return 100;
+        if (status.includes("out for delivery")) return 82;
+        if (status.includes("transit")) return 35;
+        if (status.includes("pending")) return 18;
+        return 45;
+      }
+
+      function setProgress(progress, label) {
+        const safe = Math.max(8, Math.min(100, Number(progress) || 35));
+        document.getElementById("route-progress").style.strokeDasharray =
+          `${safe} 100`;
+        document.getElementById("route-label").textContent = `${label} - ${safe}%`;
+        document.getElementById("route-label").style.setProperty(
+          "--label-left",
+          `${Math.max(14, Math.min(86, safe))}%`,
+        );
+        document
+          .getElementById("progress-mini")
+          .style.setProperty("--progress", `${safe}%`);
+        document.getElementById("progress-caption").textContent =
+          `${safe}% complete`;
+      }
+
+      function animateTruck(progress) {
+        const route = document.getElementById("route-progress");
+        const truck = document.getElementById("moving-truck");
+        const visual = document.getElementById("route-visual");
+        if (!route || !truck || !visual) return;
+
+        const maxProgress = Math.max(8, Math.min(100, Number(progress) || 35));
+        const totalLength = route.getTotalLength();
+        let start = null;
+
+        function frame(timestamp) {
+          if (!start) start = timestamp;
+          const cycle = 5600;
+          const raw = ((timestamp - start) % cycle) / cycle;
+          const eased = raw < 0.5 ? raw * 2 : (1 - raw) * 2;
+          const point = route.getPointAtLength(totalLength * (maxProgress / 100) * eased);
+          const svg = route.ownerSVGElement;
+          const svgBox = svg.viewBox.baseVal;
+          const rect = svg.getBoundingClientRect();
+          const host = visual.getBoundingClientRect();
+          const x = ((point.x - svgBox.x) / svgBox.width) * rect.width + (rect.left - host.left);
+          const y = ((point.y - svgBox.y) / svgBox.height) * rect.height + (rect.top - host.top);
+
+          truck.style.transform = `translate(${x - 15}px, ${y - 12}px)`;
+          requestAnimationFrame(frame);
+        }
+
+        requestAnimationFrame(frame);
+      }
+
       async function init() {
         const params = new URLSearchParams(window.location.search);
         const codeParam = params.get("code");
         const fallbackCode = localStorage.getItem("jns_tracking_last_code");
         const code = (codeParam || fallbackCode || "").trim().toUpperCase();
         const errorBox = document.getElementById("details-error");
+        const detailsContent = document.getElementById("details-content");
+        const extraContent = document.getElementById("extra-content");
+
         document.getElementById("display-code").textContent = code || "N/A";
 
         if (!code) {
-          if (errorBox) {
-            errorBox.innerHTML =
-              'No tracking code was provided. <a href="index.html" class="link-primary">Return to the tracking page</a> and try again.';
-            errorBox.style.display = "block";
-          }
+          errorBox.innerHTML =
+            'No tracking code was provided. <a href="index.html">Return to the tracking page</a> and try again.';
+          errorBox.style.display = "block";
           return;
         }
 
         await TrackingDB.init();
         const pkg = await TrackingDB.getByCode(code);
+
         if (!pkg) {
-          if (errorBox) {
-            errorBox.innerHTML =
-              'Tracking code not found. <a href="index.html" class="link-primary">Return to the tracking page</a> and verify your code.';
-            errorBox.style.display = "block";
-          }
+          errorBox.innerHTML =
+            'Tracking code not found. <a href="index.html">Return to the tracking page</a> and verify your code.';
+          errorBox.style.display = "block";
           return;
         }
 
-        // Update Basic Info
-        document.getElementById("display-code").textContent = pkg.code;
-        document.getElementById("status-text").textContent = pkg.onHold
-          ? "ON HOLD"
-          : pkg.status;
-        document.getElementById("update-time").textContent = new Date(
-          pkg.updatedAt,
-        ).toLocaleString();
-        document.getElementById("cust-name").textContent =
-          pkg.customerName || "N/A";
-        document.getElementById("cust-contact").textContent =
-          pkg.customerContact || "";
-        document.getElementById("cust-address").textContent =
-          pkg.deliveryAddress || "Address not provided";
-        document.getElementById("pkg-desc").textContent =
-          pkg.itemsDescription || "N/A";
-
-        // Payment
         const currencyCode = (pkg.currency || "USD").toUpperCase();
-        document.getElementById("pay-paid").textContent = formatCurrencyAmount(
-          pkg.paymentPaid || 0,
+        const statusLabel = pkg.onHold ? "On Hold" : text(pkg.status, "In Transit");
+        const progress = getProgress(pkg);
+        const deliveryAddress = text(pkg.deliveryAddress, "Address not provided");
+        const currentLocation = text(pkg.locationName, "Current location unavailable");
+        const firstLog = (pkg.movementLogs || [])[0] || {};
+        const lastLog = (pkg.movementLogs || [])[pkg.movementLogs.length - 1] || {};
+        const fromAddress = text(pkg.originAddress || firstLog.location, currentLocation);
+        const toAddress = deliveryAddress;
+        const arrivalDate = pkg.arrivalDate || addDays(pkg.updatedAt, 1);
+        const pendingFee = pkg.pendingFee ?? pkg.paymentBalance ?? 0;
+        const feeAmount = pkg.onHold
+          ? pkg.paymentHoldAmount || pkg.paymentBalance || 0
+          : pkg.totalFee || pkg.paymentPaid || 0;
+
+        detailsContent.style.display = "";
+        extraContent.style.display = "";
+
+        document.getElementById("display-code").textContent = pkg.code;
+        document.getElementById("detail-code").textContent = pkg.code;
+        document.getElementById("route-copy").textContent =
+          `${fromAddress} -> ${toAddress} - Updated ${formatDate(pkg.updatedAt, {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}`;
+
+        document.getElementById("status-pill-text").textContent = statusLabel;
+        if (pkg.onHold) {
+          document.getElementById("status-pill").classList.add("on-hold");
+        }
+
+        document.getElementById("cargo-title").textContent =
+          text(pkg.itemsDescription, "Shipment Package").split(",")[0];
+        document.getElementById("cargo-meta").textContent =
+          `${text(pkg.freightType, "Road Freight")} - ${statusLabel}`;
+        document.getElementById("cust-name").textContent =
+          text(pkg.customerName, "N/A");
+        document.getElementById("cust-contact").textContent =
+          text(pkg.customerContact, "N/A");
+        document.getElementById("from-address").textContent = fromAddress;
+        document.getElementById("to-address").textContent = toAddress;
+        document.getElementById("delivery-address").textContent = deliveryAddress;
+        document.getElementById("fee-value").textContent = formatCurrencyAmount(
+          feeAmount,
           currencyCode,
         );
-        document.getElementById("pay-balance").textContent =
-          formatCurrencyAmount(pkg.paymentBalance || 0, currencyCode);
+        document.getElementById("pending-fee").textContent =
+          formatCurrencyAmount(pendingFee, currencyCode);
+        document.getElementById("arrival-date").textContent = formatDate(
+          arrivalDate,
+          {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          },
+        );
+
+        const images = pkg.images || [];
+        if (images.length) {
+          document.getElementById("cargo-img").src = images[0];
+        }
+
+        const productImages = document.getElementById("product-images");
+        document.getElementById("image-count").textContent =
+          `${images.length} ${images.length === 1 ? "image" : "images"}`;
+        productImages.innerHTML = images.length
+          ? images
+              .slice(0, 3)
+              .map(
+                (src) =>
+                  `<img src="${src}" class="product-image" alt="Package photo" onclick="window.open(this.src)">`,
+              )
+              .join("")
+          : '<div class="image-empty">No product images attached to this shipment.</div>';
+
+        setProgress(progress, statusLabel);
+        animateTruck(progress);
+
+        const logsList = document.getElementById("logs-list");
+        const logs = [...(pkg.movementLogs || [])].reverse();
+        logsList.innerHTML = logs.length
+          ? logs
+              .map(
+                (log, index) => `
+                  <li class="timeline-item ${index === 0 ? "active" : ""}">
+                    <span class="timeline-marker"></span>
+                    <h4>${text(log.status, "Shipment update")}</h4>
+                    <p>${text(log.location, "Location not provided")}</p>
+                    <p>${formatDate(log.timestamp)}</p>
+                  </li>
+                `,
+              )
+              .join("")
+          : '<li class="timeline-item active"><span class="timeline-marker"></span><h4>Shipment created</h4><p>No movement logs available yet.</p></li>';
 
         if (pkg.onHold) {
-          document.getElementById("hold-notice").style.display = "block";
-          document.getElementById("hold-amount").textContent =
-            formatCurrencyAmount(pkg.paymentHoldAmount || 0, currencyCode);
-          document.getElementById("status-text").classList.add("text-danger");
+          document.getElementById("hold-card").style.display = "block";
+          document.getElementById("images-wrap").style.marginTop = "14px";
         }
-
-        // Timeline Logs
-        const logsList = document.getElementById("logs-list");
-        const logs = pkg.movementLogs || [];
-        if (logs.length > 0) {
-          logsList.innerHTML = logs
-            .reverse()
-            .map(
-              (log, index) => `
-                    <li class="timeline-item ${index === 0 ? "active" : ""}">
-                        <div class="timeline-marker"></div>
-                        <div class="timeline-content">
-                            <h6>${log.status}</h6>
-                            <span>${log.location}</span><br>
-                            <span class="opacity-50">${new Date(log.timestamp).toLocaleString()}</span>
-                        </div>
-                    </li>
-                `,
-            )
-            .join("");
-        } else {
-          logsList.innerHTML =
-            '<li class="text-muted small">No logs available.</li>';
-        }
-
-        // Images
-        const imagesContainer = document.getElementById("images-container");
-        const images = pkg.images || [];
-        if (images.length > 0) {
-          imagesContainer.innerHTML = images
-            .map(
-              (src) => `
-                    <div class="col-md-4 col-6">
-                        <img src="${src}" class="package-img" onclick="window.open(this.src)">
-                    </div>
-                `,
-            )
-            .join("");
-        }
-
-        // Map
-        const trackingMap = new TrackingMap("map-container");
-        await trackingMap.init();
-        setTimeout(() => trackingMap.updateLocation(pkg.lat, pkg.lng), 500);
       }
 
       window.addEventListener("load", init);

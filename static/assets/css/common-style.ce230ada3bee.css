@@ -863,7 +863,7 @@ button {
 
 /*Page Header*/
 .page-header {
-    background-image: url("../img/page-banner.43dd9cd3ab60.jpg");
+    background-image: url("../img/slider-bg.1ff4562ede34.jpg");
     background-repeat: no-repeat;
     background-position: center center;
     width: 100%;
@@ -1636,7 +1636,7 @@ blockquote span {
 
 .img-post-navigation li {
     background-color: var(--bg-dark);
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/post-1.097e06305073.jpg");
+    background-image: url("../img/post-1.097e06305073.jpg");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 105%;
@@ -1650,7 +1650,7 @@ blockquote span {
 }
 
 .img-post-navigation li:nth-child(2) {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/post-2.f42370583e76.jpg");
+    background-image: url("../img/post-2.f42370583e76.jpg");
 }
 
 .img-post-navigation li:before {

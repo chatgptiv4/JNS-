@@ -1252,7 +1252,7 @@
 }
 
 .service-section .bg-half {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/content-bg-7.d22d6a4908d0.jpg");
+    background-image: url("../img/content-bg-2.e3162a9fe62d.jpg");
 }
 
 .service-item {
@@ -1277,7 +1277,7 @@
 }
 
 .service-content {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/wave-pattern.04a7206898d7.png");
+    background-image: url("../img/wave-pattern.04a7206898d7.png");
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: 30%;
@@ -1392,11 +1392,11 @@
 }
 
 .project-section .bg-half {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/content-bg-4.783d82135a43.jpg");
+    background-image: url("../img/content-bg-4.783d82135a43.jpg");
 }
 
 .project-section .bg-half.white {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/content-bg-7.d22d6a4908d0.jpg");
+    background-image: url("../img/content-bg-2.e3162a9fe62d.jpg");
     height: 540px;
 }
 
@@ -1478,7 +1478,7 @@
 }
 
 .content-features .bg-half {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/content-bg-2.e3162a9fe62d.jpg");
+    background-image: url("../img/content-bg-2.e3162a9fe62d.jpg");
     background-position: right center;
     width: 40%;
     height: 100%;
@@ -1500,7 +1500,7 @@
 .counter-wrap {
     background-color: var(--white-color);
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/map-pattern.bac528348a87.png");
+    background-image: url("../img/map-pattern.bac528348a87.png");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: 60%;
@@ -1606,7 +1606,7 @@
 
 .feature-tab .tab-inner {
     background-color: var(--white-color);
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/map-pattern.bac528348a87.png");
+    background-image: url("../img/map-pattern.bac528348a87.png");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: contain;
@@ -1677,7 +1677,7 @@
 }
 
 .process-wrapper {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/process-line.a8df7a27232d.png");
+    background-image: url("../img/process-line.a8df7a27232d.png");
     background-repeat: no-repeat;
     background-position: center 20px;
     background-size: contain;
@@ -1753,7 +1753,7 @@
     08 CTA Section
 ====================================================*/
 .cta-wrapper {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/content-bg-3.c31fb9544930.jpg");
+    background-image: url("../img/content-bg-3.c31fb9544930.jpg");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -1762,12 +1762,12 @@
 }
 
 .cta-2 .cta-wrapper {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/content-bg-7.d22d6a4908d0.jpg");
+    background-image: url("../img/content-bg-2.e3162a9fe62d.jpg");
 }
 
 @media (min-width:993px) {
     .cta-wrapper .cta-men {
-        background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/delivery-men-2.a391dd76b7eb.png");
+        background-image: url("../img/delivery-men-2.a391dd76b7eb.png");
         background-repeat: no-repeat;
         background-position: right bottom;
         background-size: contain;
@@ -1781,7 +1781,7 @@
     }
 
     .cta-2 .cta-wrapper .cta-men {
-        background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/forklift.c98d2140a649.png");
+        background-image: url("../img/delivery-men-2.a391dd76b7eb.png");
         width: 490px;
         height: 400px;
         bottom: -40px;
@@ -1801,7 +1801,7 @@
 /*Promo Item*/
 .promo-item-wrapper .promo-item {
     background-color: var(--bg-grey);
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/truck-pattern.bedd23a7a920.png");
+    background-image: url("../img/truck-pattern.bedd23a7a920.png");
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: 50%;
@@ -1819,12 +1819,12 @@
 
 .promo-item-wrapper .col-lg-4:nth-child(2) .promo-item {
     background-color: var(--primary-color);
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/ship-pattern.7ad322e8fd6a.png");
+    background-image: url("../img/ship-pattern.7ad322e8fd6a.png");
 }
 
 .promo-item-wrapper .col-lg-4:nth-child(3) .promo-item {
     background-color: var(--bg-dark);
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/plane-pattern.4aadfe304f3c.png");
+    background-image: url("../img/plane-pattern.4aadfe304f3c.png");
 }
 
 .promo-item-wrapper .col-lg-4:nth-child(2) .promo-item i {
@@ -1963,14 +1963,14 @@
     10 Quote Section
 ====================================================*/
 .quote-section {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/content-bg-5.2aeb7a718323.jpg");
+    background-image: url("../img/content-bg-5.2aeb7a718323.jpg");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
 }
 
 .quote-section.quote-2 {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/content-bg-7.d22d6a4908d0.jpg");
+    background-image: url("../img/content-bg-2.e3162a9fe62d.jpg");
 }
 
 /*Quote Form*/
@@ -2047,7 +2047,7 @@
     }
 
     .cargo-container {
-        background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/hanging-container.178c2c78f16b.png");
+        background-image: url("../img/hanging-container.178c2c78f16b.png");
         background-repeat: no-repeat;
         background-position: left top;
         background-size: contain;
@@ -2198,7 +2198,7 @@
     13 Hero Section
 ====================================================*/
 .hero-section {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/hero-background.df89126839fd.jpg");
+    background-image: url("../img/slider-bg.1ff4562ede34.jpg");
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
@@ -2308,7 +2308,7 @@
 }
 
 .branch-item:before {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/corner-shape-red.e6f8f6e1ecb0.png");
+    background-image: url("../img/corner-shape-red.e6f8f6e1ecb0.png");
     background-repeat: no-repeat;
     background-position: left top;
     background-size: contain;
@@ -2324,7 +2324,7 @@
 }
 
 .branch-item:after {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/corner-shape-blue.5ed1c0fca1ff.png");
+    background-image: url("../img/corner-shape-red.e6f8f6e1ecb0.png");
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: contain;
@@ -2507,7 +2507,7 @@
 }
 
 .pricing-item:before {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/wave-pattern.04a7206898d7.png");
+    background-image: url("../img/wave-pattern.04a7206898d7.png");
     background-repeat: no-repeat;
     background-position: bottom right;
     background-size: contain;
@@ -2989,7 +2989,7 @@
 }
 
 .footer-wrapper {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/footer-shape.d907f89b82c9.png");
+    background-image: url("../img/footer-shape.d907f89b82c9.png");
     background-repeat: no-repeat;
     background-position: bottom center;
     background-size: contain;
@@ -3114,7 +3114,7 @@
 }
 
 .running-truck .truck {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/truck-1.36a37c7590f2.png");
+    background-image: url("../img/truck-1.36a37c7590f2.png");
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: contain;
@@ -3127,7 +3127,7 @@
 }
 
 .running-truck .truck-2 {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/truck-2.49ca0976303f.png");
+    background-image: url("../img/truck-2.49ca0976303f.png");
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: contain;
@@ -3140,7 +3140,7 @@
 }
 
 .running-truck .truck-3 {
-    background-image: url("https://jnt-servicelogistics.ltd/static/assets/img/truck-3.62bb04f5f5c4.png");
+    background-image: url("../img/truck-3.62bb04f5f5c4.png");
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: contain;

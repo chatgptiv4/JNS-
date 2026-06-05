@@ -92,6 +92,12 @@ export const TrackingDB = {
             lng: -74.006,
             status: "In Transit",
             onHold: false,
+            freightType: "Road Freight",
+            originAddress: "Sorting Facility, New York, USA",
+            progressPercent: 35,
+            arrivalDate: new Date(Date.now() + 24 * 60 * 60 * 1000)
+              .toISOString()
+              .slice(0, 10),
             updatedAt: new Date().toISOString(),
             locationName: "New York, USA",
             customerName: "John Doe",
@@ -99,6 +105,8 @@ export const TrackingDB = {
             deliveryAddress: "123 Logistics Way, Brooklyn, NY 11201",
             itemsDescription: "Electronics, MacBook Pro, and Accessories",
             currency: "USD",
+            totalFee: 1700,
+            pendingFee: 200,
             paymentPaid: 1500,
             paymentBalance: 200,
             paymentHoldAmount: 0,
@@ -124,6 +132,12 @@ export const TrackingDB = {
             lng: -74.006,
             status: "In Transit",
             onHold: false,
+            freightType: "Road Freight",
+            originAddress: "Sorting Facility, New York, USA",
+            progressPercent: 35,
+            arrivalDate: new Date(Date.now() + 24 * 60 * 60 * 1000)
+              .toISOString()
+              .slice(0, 10),
             updatedAt: new Date().toISOString(),
             locationName: "New York, USA",
             customerName: "John Doe",
@@ -131,6 +145,8 @@ export const TrackingDB = {
             deliveryAddress: "123 Logistics Way, Brooklyn, NY 11201",
             itemsDescription: "Electronics, MacBook Pro, and Accessories",
             currency: "USD",
+            totalFee: 1700,
+            pendingFee: 200,
             paymentPaid: 1500,
             paymentBalance: 200,
             paymentHoldAmount: 0,
