@@ -1008,6 +1008,28 @@
           };
 
           const error = validateShipmentData(pkgData);
+
+          const validationError = validateShipmentData(pkgData);
+if (validationError) {
+  showModalAlert(validationError, "danger");
+  return;
+}
+
+try {
+  await TrackingDB.save(pkgData);  // ← THIS LINE IS MISSING
+  await renderPackages();
+  addPackageModal.hide();
+  form.reset();
+  showModalAlert(
+    isEdit ? "Shipment updated successfully!" : "Shipment created successfully!",
+    "success"
+  );
+  setTimeout(hideModalAlert, 3000);
+} catch (error) {
+  showModalAlert(error.message || "Failed to save shipment.", "danger");
+}
+
+          
           if (error) {
             showModalAlert(error);
             return;
