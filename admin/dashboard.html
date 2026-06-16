@@ -453,7 +453,7 @@
                       id="cust-name"
                       class="form-control"
                       placeholder="e.g. John Doe"
-                      required
+                      
                     />
                   </div>
                   <div class="mb-3">
@@ -465,7 +465,7 @@
                       id="cust-contact"
                       class="form-control"
                       placeholder="e.g. +1 555-0123"
-                      required
+                      
                     />
                   </div>
                   <div class="mb-3">
@@ -477,7 +477,7 @@
                       class="form-control"
                       rows="3"
                       placeholder="Street, City, Zip, Country"
-                      required
+                      
                     ></textarea>
                   </div>
                 </div>
@@ -493,7 +493,7 @@
                       class="form-control"
                       rows="2"
                       placeholder="e.g. 1x Laptop, 2x Monitors"
-                      required
+                      
                     ></textarea>
                   </div>
                   <div class="row g-3 mb-3">
@@ -517,7 +517,7 @@
                         id="loc-name"
                         class="form-control"
                         placeholder="e.g. London, UK"
-                        required
+                        
                       />
                     </div>
                   </div>
@@ -540,7 +540,7 @@
                         id="progress-percent"
                         class="form-control"
                         value="35"
-                        required
+                        
                       />
                     </div>
                   </div>
@@ -562,7 +562,7 @@
                         id="loc-lat"
                         class="form-control"
                         value="0"
-                        required
+                        
                       />
                     </div>
                     <div class="col-6">
@@ -573,7 +573,7 @@
                         id="loc-lng"
                         class="form-control"
                         value="0"
-                        required
+                        
                       />
                     </div>
                   </div>
@@ -1123,6 +1123,12 @@
         await TrackingDB.init();
         renderPackages();
       })();
+      // Prevent HTML validation crash from hidden tabs
+document
+  .getElementById("add-package-form")
+  .addEventListener("invalid", (e) => {
+    e.preventDefault();
+  }, true);
     </script>
   </body>
 </html>
