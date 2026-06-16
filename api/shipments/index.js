@@ -6,39 +6,47 @@ const filePath = path.resolve("./data/shipments.json");
 function readDB() {
   try {
     if (!fs.existsSync(filePath)) return {};
-    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const raw = fs.readFileSync(filePath, "utf8");
+    return raw ? JSON.parse(raw) : {};
   } catch (e) {
+    console.error("READ ERROR:", e);
     return {};
   }
 }
 
 function writeDB(data) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  try {
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  } catch (e) {
+    console.error("WRITE ERROR:", e);
+  }
 }
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   res.setHeader("Content-Type", "application/json");
 
-  const db = readDB();
+  let db = readDB();
 
-  // GET all shipments
-  if (req.method === "GET") {
-    return res.status(200).json(db);
-  }
+  try {
+    // ✅ GET ALL
+    if (req.method === "GET") {
+      return res.status(200).json(db);
+    }
 
-  // CREATE / UPDATE shipment
-  if (req.method === "POST") {
-    try {
-      let body = req.body;
+    // ✅ POST (CREATE / UPDATE)
+    if (req.method === "POST") {
+      let body = "";
 
-      // Fix string body issue
-      if (typeof body === "string") {
-        body = JSON.parse(body);
-      }
+      await new Promise((resolve) => {
+        req.on("data", (chunk) => (body += chunk));
+        req.on("end", resolve);
+      });
 
-      if (!body?.code) {
-        return res.status(400).json({ error: "Missing tracking code" });
+      body = body ? JSON.parse(body) : {};
+
+      if (!body.code) {
+        return res.status(400).json({ error: "Missing code" });
       }
 
       const code = body.code.toUpperCase();
@@ -53,21 +61,14 @@ export default function handler(req, res) {
 
       return res.status(200).json({
         success: true,
-        message: "Shipment saved",
         code,
       });
-    } catch (err) {
-      return res.status(500).json({
-        error: "Server error",
-        details: err.message,
-      });
     }
-  }
 
-  // DELETE shipment
-  if (req.method === "DELETE") {
-    try {
+    // ✅ DELETE
+    if (req.method === "DELETE") {
       const { code } = req.query;
+
       if (!code || !db[code.toUpperCase()]) {
         return res.status(404).json({ error: "Not found" });
       }
@@ -76,10 +77,15 @@ export default function handler(req, res) {
       writeDB(db);
 
       return res.status(200).json({ success: true });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
     }
-  }
 
-  return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({ error: "Method not allowed" });
+  } catch (err) {
+    console.error("API ERROR:", err);
+
+    return res.status(500).json({
+      error: "Server error",
+      details: err.message,
+    });
+  }
 }
