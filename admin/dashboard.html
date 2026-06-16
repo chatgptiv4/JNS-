@@ -798,7 +798,12 @@
 
       async function renderPackages() {
         const list = document.getElementById("package-list");
-        const packages = await TrackingDB.getAll();
+        const raw = await TrackingDB.getAll();
+const packages = Array.isArray(raw)
+  ? raw
+  : raw
+  ? Object.values(raw)
+  : [];
         list.innerHTML = packages
           .map(
             (pkg) => `
