@@ -1,9 +1,4 @@
-/**
- * JNS Express Delivery - GitHub-backed Tracking System
- * Firebase removed completely
- */
-
-const API_BASE = "/api/shipments";
+const API_URL = "/api/shipments";
 
 export const TrackingDB = {
   async init() {
@@ -12,51 +7,59 @@ export const TrackingDB = {
 
   async getAll() {
     try {
-      const res = await fetch(API_BASE);
-      const data = await res.json();
-      return Object.values(data || {});
+      const res = await fetch(API_URL);
+      return await res.json();
     } catch (err) {
-      console.error("getAll failed:", err);
-      return [];
+      console.error("getAll failed", err);
+      return {};
     }
   },
 
   async getByCode(code) {
     try {
-      const res = await fetch(`${API_BASE}/${code.toUpperCase()}`);
-      if (!res.ok) return null;
-      return await res.json();
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      return data[code.toUpperCase()] || null;
     } catch (err) {
-      console.error("getByCode failed:", err);
+      console.error("getByCode failed", err);
       return null;
     }
   },
 
   async save(packageData) {
-    const data = {
-      ...packageData,
-      code: packageData.code.toUpperCase(),
-      currency: (packageData.currency || "USD").toUpperCase(),
-      updatedAt: new Date().toISOString(),
-    };
-
     try {
-      const res = await fetch(API_BASE, {
+      const res = await fetch(API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(packageData),
       });
 
-      return res.ok;
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Save failed");
+      }
+
+      return data;
     } catch (err) {
       console.error("Save failed:", err);
-      return false;
+      throw err;
     }
   },
 
   async delete(code) {
-    // optional future implementation
-    return true;
+    try {
+      const res = await fetch(`${API_URL}?code=${code}`, {
+        method: "DELETE",
+      });
+
+      return await res.json();
+    } catch (err) {
+      console.error("Delete failed:", err);
+      throw err;
+    }
   },
 
   generateCode() {
