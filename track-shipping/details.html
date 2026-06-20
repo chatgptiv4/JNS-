@@ -642,6 +642,66 @@
         display: none;
       }
 
+      /* Lightbox Styles */
+      .lightbox {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .lightbox.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease, transform 0.2s ease;
+        z-index: 100000;
+      }
+
+      .lightbox-close:hover,
+      .lightbox-close:focus {
+        background: rgba(255, 255, 255, 0.25);
+        transform: scale(1.1);
+        outline: none;
+      }
+
+      .lightbox-image {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+      }
+
+      .lightbox.active .lightbox-image {
+        transform: scale(1);
+      }
+
       @media (max-width: 860px) {
         .tracking-grid,
         .extra-grid {
@@ -726,6 +786,16 @@
     <div class="top-bar">
       <a href="../index.html" class="brand">JNS<span>delivery</span></a>
       <a href="index.html" class="track-another">Track another</a>
+    </div>
+
+    <!-- Lightbox Overlay -->
+    <div id="lightbox" class="lightbox" style="display: none;" aria-hidden="true" role="dialog" aria-modal="true">
+      <button id="lightbox-close" class="lightbox-close" aria-label="Close image">
+        <svg viewBox="0 0 24 24" width="32" height="32">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="white"/>
+        </svg>
+      </button>
+      <img id="lightbox-image" class="lightbox-image" src="" alt="Full-size package photo"/>
     </div>
 
     <main class="tracking-shell">
@@ -1028,6 +1098,43 @@
         }, 180);
       }
 
+      // Lightbox functions
+      function openLightbox(src, alt = "Full-size package photo") {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImage = document.getElementById("lightbox-image");
+        
+        if (!lightbox || !lightboxImage) return;
+
+        // Prevent background scrolling
+        document.body.style.overflow = "hidden";
+        
+        // Set image source and alt
+        lightboxImage.src = src;
+        lightboxImage.alt = alt;
+        
+        // Show lightbox
+        lightbox.style.display = "flex";
+        setTimeout(() => {
+          lightbox.classList.add("active");
+          lightbox.setAttribute("aria-hidden", "false");
+        }, 10);
+      }
+
+      function closeLightbox() {
+        const lightbox = document.getElementById("lightbox");
+        if (!lightbox) return;
+        
+        // Hide lightbox
+        lightbox.classList.remove("active");
+        lightbox.setAttribute("aria-hidden", "true");
+        
+        setTimeout(() => {
+          lightbox.style.display = "none";
+          // Restore background scrolling
+          document.body.style.overflow = "";
+        }, 300);
+      }
+
       function renderProductImages(images) {
         const productImages = document.getElementById("product-images");
         const mainWrap = document.getElementById("product-main");
@@ -1076,10 +1183,16 @@
             setMainProductImage(src, image.alt);
           }
 
-          image.addEventListener("click", selectImage);
+          // Open lightbox on click
+          function openInLightbox(event) {
+            event.preventDefault();
+            openLightbox(src, image.alt);
+          }
+
+          image.addEventListener("click", openInLightbox);
           image.addEventListener("keydown", (event) => {
             if (event.key === "Enter" || event.key === " ") {
-              selectImage(event);
+              openInLightbox(event);
             }
           });
 
@@ -1208,6 +1321,19 @@
           document.getElementById("images-wrap").style.marginTop = "14px";
         }
       }
+
+      // Initialize lightbox event listeners
+      document.getElementById("lightbox-close").addEventListener("click", closeLightbox);
+      document.getElementById("lightbox").addEventListener("click", (e) => {
+        if (e.target.id === "lightbox") {
+          closeLightbox();
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          closeLightbox();
+        }
+      });
 
       window.addEventListener("load", init);
     </script>
