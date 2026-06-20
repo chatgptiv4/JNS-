@@ -322,6 +322,64 @@
         gap: 10px;
       }
 
+      .product-main {
+        display: none;
+        position: relative;
+        margin-bottom: 10px;
+        overflow: hidden;
+        border-radius: 10px;
+        background: #e2e8f0;
+        aspect-ratio: 16 / 10;
+      }
+
+      .product-main.has-image {
+        display: block;
+      }
+
+      .product-main-image {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transform: scale(1);
+        opacity: 1;
+        transition:
+          opacity 0.38s ease,
+          transform 0.38s ease;
+      }
+
+      .product-main-image.is-switching {
+        opacity: 0.2;
+        transform: scale(0.985);
+      }
+
+      .product-main-minimize {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(7, 22, 45, 0.78);
+        color: #fff;
+        font-size: 21px;
+        line-height: 1;
+        cursor: pointer;
+        transition:
+          background 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .product-main-minimize:hover,
+      .product-main-minimize:focus {
+        outline: none;
+        background: rgba(7, 22, 45, 0.94);
+        transform: scale(1.05);
+      }
+
       .product-image {
         width: 100%;
         aspect-ratio: 1.15 / 1;
@@ -334,10 +392,20 @@
           box-shadow 0.2s ease;
       }
 
-      .product-image:hover {
+      .product-image:hover,
+      .product-image:focus {
+        outline: none;
         transform: translateY(-2px);
         box-shadow: 0 12px 22px rgba(15, 23, 42, 0.12);
       }
+
+      .product-image.is-selected {
+        box-shadow:
+          0 0 0 3px rgba(255, 140, 0, 0.32),
+          0 12px 22px rgba(15, 23, 42, 0.12);
+      }
+
+      /* Keep all thumbnails visible */
 
       .image-empty {
         grid-column: 1 / -1;
@@ -749,6 +817,22 @@
               <h3>Package Documentation</h3>
               <span id="image-count">0 images</span>
             </div>
+            <div class="product-main" id="product-main">
+              <img
+                src=""
+                alt="Selected package photo"
+                class="product-main-image"
+                id="product-main-image"
+              />
+              <button
+                type="button"
+                class="product-main-minimize"
+                id="product-main-minimize"
+                aria-label="Minimize selected package photo"
+              >
+                &times;
+              </button>
+            </div>
             <div class="product-images" id="product-images"></div>
           </div>
         </article>
@@ -924,6 +1008,85 @@
         requestAnimationFrame(frame);
       }
 
+      function setMainProductImage(src, alt = "Selected package photo") {
+        const mainWrap = document.getElementById("product-main");
+        const mainImage = document.getElementById("product-main-image");
+        const cargoImage = document.getElementById("cargo-img");
+        if (!mainWrap || !mainImage || !src || mainImage.dataset.currentSrc === src) return;
+
+        mainWrap.classList.add("has-image");
+        mainImage.classList.add("is-switching");
+
+        window.setTimeout(() => {
+          mainImage.src = src;
+          mainImage.alt = alt;
+          mainImage.dataset.currentSrc = src;
+          cargoImage.src = src;
+          window.requestAnimationFrame(() => {
+            mainImage.classList.remove("is-switching");
+          });
+        }, 180);
+      }
+
+      function renderProductImages(images) {
+        const productImages = document.getElementById("product-images");
+        const mainWrap = document.getElementById("product-main");
+        const mainImage = document.getElementById("product-main-image");
+        const minimizeButton = document.getElementById("product-main-minimize");
+
+        productImages.innerHTML = "";
+        mainWrap.classList.remove("has-image");
+        mainImage.removeAttribute("src");
+        delete mainImage.dataset.currentSrc;
+
+        minimizeButton.onclick = () => {
+          mainImage.classList.add("is-switching");
+          window.setTimeout(() => {
+            mainWrap.classList.remove("has-image");
+            productImages
+              .querySelectorAll(".product-image.is-selected")
+              .forEach((selected) => selected.classList.remove("is-selected"));
+            mainImage.removeAttribute("src");
+            delete mainImage.dataset.currentSrc;
+            mainImage.classList.remove("is-switching");
+          }, 180);
+        };
+
+        if (!images.length) {
+          productImages.innerHTML =
+            '<div class="image-empty">No product images attached to this shipment.</div>';
+          return;
+        }
+
+        images.slice(0, 3).forEach((src, index) => {
+          const image = document.createElement("img");
+          image.src = src;
+          image.className = "product-image";
+          image.alt = `Package photo ${index + 1}`;
+          image.tabIndex = 0;
+          image.setAttribute("role", "button");
+          image.setAttribute("aria-label", `View package photo ${index + 1}`);
+
+          function selectImage(event) {
+            event.preventDefault();
+            document
+              .querySelectorAll(".product-image.is-selected")
+              .forEach((selected) => selected.classList.remove("is-selected"));
+            image.classList.add("is-selected");
+            setMainProductImage(src, image.alt);
+          }
+
+          image.addEventListener("click", selectImage);
+          image.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              selectImage(event);
+            }
+          });
+
+          productImages.appendChild(image);
+        });
+      }
+
       async function init() {
         const params = new URLSearchParams(window.location.search);
         const codeParam = params.get("code");
@@ -1016,18 +1179,9 @@
           document.getElementById("cargo-img").src = images[0];
         }
 
-        const productImages = document.getElementById("product-images");
         document.getElementById("image-count").textContent =
           `${images.length} ${images.length === 1 ? "image" : "images"}`;
-        productImages.innerHTML = images.length
-          ? images
-              .slice(0, 3)
-              .map(
-                (src) =>
-                  `<img src="${src}" class="product-image" alt="Package photo" onclick="window.open(this.src)">`,
-              )
-              .join("")
-          : '<div class="image-empty">No product images attached to this shipment.</div>';
+        renderProductImages(images);
 
         setProgress(progress, statusLabel);
         animateTruck(progress);
