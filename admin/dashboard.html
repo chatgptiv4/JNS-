@@ -940,24 +940,60 @@
         .getElementById("add-log-btn")
         .addEventListener("click", () => addLogEntry());
 
+      // Function to render image preview with delete button
+      function renderImagePreview(src, index) {
+        const container = document.getElementById("img-preview-container");
+        const imgWrapper = document.createElement("div");
+        imgWrapper.className = "img-preview-wrapper";
+        imgWrapper.style.position = "relative";
+        imgWrapper.style.display = "inline-block";
+        imgWrapper.style.marginRight = "10px";
+        imgWrapper.style.marginBottom = "10px";
+        
+        const img = document.createElement("img");
+        img.src = src;
+        img.className = "img-preview";
+        
+        const deleteBtn = document.createElement("button");
+        deleteBtn.type = "button";
+        deleteBtn.className = "btn btn-sm btn-danger position-absolute top-0 end-0";
+        deleteBtn.style.borderRadius = "50%";
+        deleteBtn.style.width = "24px";
+        deleteBtn.style.height = "24px";
+        deleteBtn.style.padding = "0";
+        deleteBtn.style.display = "flex";
+        deleteBtn.style.alignItems = "center";
+        deleteBtn.style.justifyContent = "center";
+        deleteBtn.innerHTML = "×";
+        deleteBtn.onclick = () => {
+          currentImages.splice(index, 1);
+          container.innerHTML = "";
+          currentImages.forEach((imgSrc, idx) => renderImagePreview(imgSrc, idx));
+        };
+        
+        imgWrapper.appendChild(img);
+        imgWrapper.appendChild(deleteBtn);
+        container.appendChild(imgWrapper);
+      }
+
       // Image Preview
       document
         .getElementById("pkg-images")
         .addEventListener("change", function (e) {
-          const files = Array.from(e.target.files).slice(0, 3);
+          const files = Array.from(e.target.files).slice(0, 3 - currentImages.length);
           const container = document.getElementById("img-preview-container");
 
           files.forEach((file) => {
             const reader = new FileReader();
             reader.onload = function (event) {
+              const newIndex = currentImages.length;
               currentImages.push(event.target.result);
-              const img = document.createElement("img");
-              img.src = event.target.result;
-              img.className = "img-preview";
-              container.appendChild(img);
+              renderImagePreview(event.target.result, newIndex);
             };
             reader.readAsDataURL(file);
           });
+          // Reset file input
+          e.target.value = "";
         });
 
       // Save/Update Shipment
@@ -1007,53 +1043,26 @@
             images: currentImages,
           };
 
-          const error = validateShipmentData(pkgData);
-
           const validationError = validateShipmentData(pkgData);
-if (validationError) {
-  showModalAlert(validationError, "danger");
-  return;
-}
-
-try {
-  await TrackingDB.save(pkgData);  // ← THIS LINE IS MISSING
-  await renderPackages();
-  addPackageModal.hide();
-  form.reset();
-  showModalAlert(
-    isEdit ? "Shipment updated successfully!" : "Shipment created successfully!",
-    "success"
-  );
-  setTimeout(hideModalAlert, 3000);
-} catch (error) {
-  showModalAlert(error.message || "Failed to save shipment.", "danger");
-}
-
-          
-          if (error) {
-            showModalAlert(error);
+          if (validationError) {
+            showModalAlert(validationError, "danger");
             return;
           }
 
           try {
-            const success = await TrackingDB.save(pkgData);
-
-            if (success) {
-              addPackageModal.hide();
-              form.reset();
-              currentImages = [];
-              currentLogs = [];
-              await renderPackages();
-              showModalAlert(
-                isEdit
-                  ? "Shipment updated successfully!"
-                  : "Shipment created successfully!",
-                "success",
-              );
-              setTimeout(hideModalAlert, 3000);
-            }
+            await TrackingDB.save(pkgData);
+            await renderPackages();
+            addPackageModal.hide();
+            form.reset();
+            currentImages = [];
+            currentLogs = [];
+            showModalAlert(
+              isEdit ? "Shipment updated successfully!" : "Shipment created successfully!",
+              "success"
+            );
+            setTimeout(hideModalAlert, 3000);
           } catch (error) {
-            showModalAlert(error.message || "Failed to save shipment.");
+            showModalAlert(error.message || "Failed to save shipment.", "danger");
           }
         });
       }
@@ -1120,11 +1129,8 @@ try {
             currentImages = pkg.images || [];
 
             if (pkg.images && pkg.images.length) {
-              pkg.images.forEach((img) => {
-                const imgEl = document.createElement("img");
-                imgEl.src = img;
-                imgEl.className = "img-preview";
-                imgContainer.appendChild(imgEl);
+              pkg.images.forEach((img, index) => {
+                renderImagePreview(img, index);
               });
             }
 
